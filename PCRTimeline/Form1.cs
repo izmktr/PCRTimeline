@@ -88,6 +88,10 @@ namespace PCRTimeline
         {
             if (mouseDownPoint != Point.Empty)
             {
+                int x = Cursor.Position.X + mouseDownPoint.X;
+                int y = Cursor.Position.Y + mouseDownPoint.Y;
+                Win32ImageList.ImageList_DragMove(x, y);
+                /*
                 Rectangle dragRegion = new Rectangle(
                     mouseDownPoint.X - SystemInformation.DragSize.Width / 2,
                     mouseDownPoint.Y - SystemInformation.DragSize.Height / 2,
@@ -95,26 +99,11 @@ namespace PCRTimeline
                     SystemInformation.DragSize.Height);
                 if (!dragRegion.Contains(e.X, e.Y))
                 {
-                    var image = avatarlist[0].image;
-
-
-                    // Imageの初期化 
-                    imageList.Images.Clear();
-                    imageList.ImageSize = new Size(image.Width, image.Height);
-
-                    // 半透明イメージの元画像を作成、ImageListに追加 
-                    imageList.Images.Add(image);
-
-                    // ImageList_BeginDragにはドラッグする
-                    // イメージの中における相対座標を指定する 
-                    if (Win32ImageList.ImageList_BeginDrag(imageList.Handle, 0,
-                                                     e.X,
-                                                     e.Y))
-                    {
-                        Win32ImageList.ImageList_EndDrag();
-                    }
+                    
+                    Win32ImageList.ImageList_DragMove(e.X, e.Y);
                     mouseDownPoint = Point.Empty;
                 }
+                */
 
             }
         }
@@ -123,7 +112,22 @@ namespace PCRTimeline
         {
             if (e.Button == MouseButtons.Left)
             {
-                mouseDownPoint = new Point(e.X, e.Y);
+                var image = avatarlist[0].image;
+                mouseDownPoint = new Point(e.X - this.Bounds.X - image.Width / 2, e.Y - this.Bounds.Y - image.Height / 2);
+
+                // Imageの初期化 
+                imageList.Images.Clear();
+                imageList.ImageSize = new Size(image.Width, image.Height);
+
+                // 半透明イメージの元画像を作成、ImageListに追加 
+                imageList.Images.Add(image);
+
+                // ImageList_BeginDragにはドラッグする
+                // イメージの中における相対座標を指定する 
+                Win32ImageList.ImageList_BeginDrag(imageList.Handle, 0, e.X, e.Y);
+                int x = Cursor.Position.X + mouseDownPoint.X;
+                int y = Cursor.Position.Y + mouseDownPoint.Y;
+                Win32ImageList.ImageList_DragEnter(this.Handle, x, y);
             }
         }
 
@@ -138,6 +142,27 @@ namespace PCRTimeline
             // ListBoxのHandleを渡すのでなく、FormのHandleを渡す 
             Win32ImageList.ImageList_DragEnter(this.Handle, x, y);
         }
+
+        private void splitContainer1_Panel2_DragLeave(object sender, EventArgs e)
+        {
+            Win32ImageList.ImageList_DragLeave(this.Handle);
+
+        }
+
+        private void toolStripLabel1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void splitContainer1_Panel2_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Win32ImageList.ImageList_EndDrag();
+                mouseDownPoint = Point.Empty;
+            }
+        }
+
     }
 }
 
