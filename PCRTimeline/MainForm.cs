@@ -10,15 +10,22 @@ using System.Windows.Forms;
 
 namespace PCRTimeline
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        List<Avatar> avatarlist = new List<Avatar>();
-        System.Windows.Forms.ImageList imageList;
+        const int IconSize = 48;
 
-        public Form1()
+        List<Avatar> avatarlist = new List<Avatar>();
+        System.Windows.Forms.ImageList imageList = new System.Windows.Forms.ImageList();
+
+        List<Battler> battlerlist = new List<Battler>();
+
+        TimelineForm timeline = new TimelineForm();
+        CharaForm chara = new CharaForm();
+
+
+        public MainForm()
         {
             InitializeComponent();
-            imageList = new System.Windows.Forms.ImageList();
         }
 
         void AvatarLoad()
@@ -30,57 +37,32 @@ namespace PCRTimeline
             {
                 avatarlist.Add(new Avatar()
                 {
-                    Name = file,
-                    image = Image.FromFile(file)
+                    name = file,
+                    image = (new Bitmap(Image.FromFile(file), new Size(IconSize, IconSize)))
                 });
+                avatarlist.Last().SetSkill();
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
-                avatarlist.Add(avatarlist[0]);
-                avatarlist.Add(avatarlist[1]);
+                battlerlist.Add(new Battler() { avatar = avatarlist[i] });
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (this.DesignMode) return;
+
             AvatarLoad();
-        }
 
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-            Control c = (Control)sender;
-            int width = c.Width - iconScrollBar.Width;
-            int height = c.Height;
+            timeline.avatarlist = avatarlist;
+            timeline.battlerlist = battlerlist;
+            timeline.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
 
-            int x = 0, y = 0, maxheight = 0;
-            foreach (var avatar in avatarlist)
-            {
-                Image image = avatar.image;
-
-                //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
-                e.Graphics.DrawImage(image, x, y - iconScrollBar.Value, image.Width, image.Height);
-                x += image.Width;
-
-                maxheight = Math.Max(maxheight, image.Height);
-                if (0 < x && width - image.Width <= x)
-                {
-                    x = 0;
-                    y += maxheight;
-                    maxheight = 0;
-                }
-            }
-
-            iconScrollBar.Maximum = y + maxheight;
-            iconScrollBar.LargeChange = height;
+            chara.avatarlist = avatarlist;
+            chara.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.DockBottom);
 
         }
-
-        private void iconScrollBar_Scroll(object sender, ScrollEventArgs e)
-        {
-            splitContainer1.Panel2.Invalidate();
-        }
-
 
         Point mouseDownPoint = Point.Empty;
 
@@ -163,6 +145,28 @@ namespace PCRTimeline
             }
         }
 
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        void x()
+        {
+        }
+
+        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+        }
+
+        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+        }
     }
 }
 
