@@ -12,8 +12,8 @@ namespace PCRTimeline
     {
         internal List<Avatar> avatarlist;
 
-        ScrollBar charascrollbar = new HScrollBar();
-        
+        int beforetab = 0;
+
         public CharaForm()
         {
             InitializeComponent();
@@ -24,9 +24,9 @@ namespace PCRTimeline
 
         }
 
-        void DrawCharactor(Control c, PaintEventArgs e, ScrollBar scrollBar)
+        void DrawCharactor(TabPage c, PaintEventArgs e)
         {
-            int width = c.Width - scrollBar.Width + 10;
+            int width = c.Width - vScrollBar1.Width;
             int height = c.Height;
 
             int x = 0, y = 0, maxheight = 0;
@@ -35,11 +35,11 @@ namespace PCRTimeline
                 Image image = avatar.image;
 
                 //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
-                e.Graphics.DrawImage(image, x, y - scrollBar.Value, image.Width, image.Height);
+                e.Graphics.DrawImage(image, x, y - vScrollBar1.Value, image.Width, image.Height);
                 x += image.Width;
 
                 maxheight = Math.Max(maxheight, image.Height);
-                if (0 < x && width - image.Width <= x)
+                if (0 < x && width + image.Width <= x)
                 {
                     x = 0;
                     y += maxheight;
@@ -47,14 +47,32 @@ namespace PCRTimeline
                 }
             }
 
-            scrollBar.Maximum = y + maxheight;
-            scrollBar.LargeChange = height;
+            vScrollBar1.Maximum = y + maxheight;
+            vScrollBar1.LargeChange = height;
         }
 
 
         private void CharaForm_Paint(object sender, PaintEventArgs e)
         {
-            DrawCharactor((Control)sender, e, charascrollbar);
+            
+            DrawCharactor((TabPage)sender, e);
+        }
+
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TabControl tab = (TabControl)sender;
+
+            if (beforetab != tab.SelectedIndex) {
+                tab.TabPages[beforetab].Controls.Remove(vScrollBar1);
+                tab.TabPages[tab.SelectedIndex].Controls.Add(vScrollBar1);
+                beforetab = tab.SelectedIndex;
+            }
+            
+        }
+
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            tabControl.Invalidate();
         }
     }
 }

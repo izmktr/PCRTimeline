@@ -10,8 +10,17 @@ namespace PCRTimeline
 {
     public partial class TimelineForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        internal List<Avatar> avatarlist;
         internal List<Battler> battlerlist;
+        internal int scope = 2;
+        int[] secondsizearray = { 4, 8, 16, 32, 64 };
+
+
+        class DragPoint
+        {
+            public Rectangle rect;
+
+        }
+        List<Rectangle> clickablepoint = new List<Rectangle>();
 
         public TimelineForm()
         {
@@ -21,8 +30,11 @@ namespace PCRTimeline
         private void TimelineForm_Paint(object sender, PaintEventArgs e)
         {
             const int IconSize = 48;
-            const int secondsize = 16;
+            int secondsize = secondsizearray[scope];
             const int timelinesize = 16;
+            const int clickband = 6;
+
+            clickablepoint.Clear();
 
             int y = 0;
             Graphics g = e.Graphics;
@@ -51,14 +63,33 @@ namespace PCRTimeline
                 float time = 0f;
                 foreach (var item in battler.avatar.timeline)
                 {
-                    g.FillRectangle(Brushes.LightBlue, time * secondsize + image.Width, y + 4, item.acttime * secondsize, image.Height - 16);
-                    g.DrawRectangle(Pens.Black, time * secondsize + image.Width, y + 4, item.acttime * secondsize, image.Height - 16);
+                    int x = (int) time * secondsize + IconSize;
+                    int width = (int) item.acttime * secondsize;
+                    g.FillRectangle(Brushes.LightBlue, x, y + 4, width, image.Height - 16);
+                    g.DrawRectangle(Pens.Black, x, y + 4, width, image.Height - 16);
                     time += item.AllTime;
+
+                    clickablepoint.Add(new Rectangle(x - clickband / 2, y + 4, clickband, image.Height - 16));
+                    clickablepoint.Add(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16));
+
                 }
 
                 y += image.Height;
             }
 
+        }
+
+        private void TimelineForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            foreach (var rect in clickablepoint)
+            {
+                if (rect.Contains(e.X, e.Y))
+                {
+                    this.Cursor = Cursors.SizeWE;
+                    return;
+                }
+            }
+            this.Cursor = Cursors.Default;
         }
     }
 }

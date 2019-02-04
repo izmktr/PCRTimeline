@@ -47,6 +47,7 @@
             this.Name = "TimelineForm";
             this.Text = "Timeline";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.TimelineForm_Paint);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseMove);
             this.ResumeLayout(false);
 
         }

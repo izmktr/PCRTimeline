@@ -19,9 +19,10 @@ namespace PCRTimeline
 
         List<Battler> battlerlist = new List<Battler>();
 
-        TimelineForm timeline = new TimelineForm();
-        CharaForm chara = new CharaForm();
+        TimelineForm timeline;
+        CharaForm chara;
 
+        int scope = 2;
 
         public MainForm()
         {
@@ -55,13 +56,29 @@ namespace PCRTimeline
 
             AvatarLoad();
 
-            timeline.avatarlist = avatarlist;
-            timeline.battlerlist = battlerlist;
-            timeline.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+            OpenTimeline();
 
+            OpenChara();
+
+        }
+
+        private void OpenChara()
+        {
+            chara = new CharaForm();
             chara.avatarlist = avatarlist;
             chara.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.DockBottom);
 
+            chara.FormClosed += (s, e) => charaToolStripMenuItem.Checked = false;
+        }
+
+        private void OpenTimeline()
+        {
+            timeline = new TimelineForm();
+            timeline.battlerlist = battlerlist;
+            timeline.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+            timeline.scope = scope;
+
+            timeline.FormClosed += (s, e) => timelineToolStripMenuItem.Checked = false;
         }
 
         Point mouseDownPoint = Point.Empty;
@@ -145,27 +162,87 @@ namespace PCRTimeline
             }
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        void ScopeChange(int scope)
         {
+            ToolStripMenuItem [] menu = {
+                x14ToolStripMenuItem,
+                x12ToolStripMenuItem,
+                x1ToolStripMenuItem,
+                x2ToolStripMenuItem,
+                x4ToolStripMenuItem,
+            };
 
+            for (int i = 0; i < menu.Length; i++)
+            {
+                menu[i].Checked = i == scope;
+                if (i == scope)
+                {
+                    menu[i].CheckState = System.Windows.Forms.CheckState.Checked;
+                }
+            }
+
+            if (timeline != null)
+            {
+                this.scope = scope;
+                timeline.scope = scope;
+                timeline.Invalidate();
+            }
         }
 
-        void x()
+        private void x14ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ScopeChange(0);
         }
 
-        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        private void x12ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            ScopeChange(1);
         }
 
-
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        private void x1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ScopeChange(2);
         }
 
-        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        private void x2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ScopeChange(3);
+        }
+
+        private void x4ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ScopeChange(4);
+        }
+
+        private void timelineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (timelineToolStripMenuItem.Checked)
+            {
+                timeline.Close();
+                timeline = null;
+                timelineToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                OpenTimeline();
+                timelineToolStripMenuItem.Checked = true;
+            }
+        }
+
+        private void charaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (charaToolStripMenuItem.Checked)
+            {
+                chara.Close();
+                chara = null;
+                charaToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                OpenChara();
+                charaToolStripMenuItem.Checked = true;
+            }
+
         }
     }
 }
