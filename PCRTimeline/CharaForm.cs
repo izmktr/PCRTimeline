@@ -11,7 +11,16 @@ namespace PCRTimeline
     public partial class CharaForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
         internal List<Avatar> avatarlist;
+        private Point prevPosition;
+        int toolTipTime = 0;
 
+        class ClickableObject{
+            public Rectangle rect;
+            public Avatar avatar;
+        }
+
+        List<ClickableObject> clicklist = new List<ClickableObject>();
+        
         int beforetab = 0;
 
         public CharaForm()
@@ -29,6 +38,8 @@ namespace PCRTimeline
             int width = c.Width - vScrollBar1.Width;
             int height = c.Height;
 
+            clicklist.Clear();
+
             int x = 0, y = 0, maxheight = 0;
             foreach (var avatar in avatarlist)
             {
@@ -37,6 +48,13 @@ namespace PCRTimeline
                 //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
                 e.Graphics.DrawImage(image, x, y - vScrollBar1.Value, image.Width, image.Height);
                 x += image.Width;
+
+                clicklist.Add(
+                    new ClickableObject()
+                    {
+                        rect = new Rectangle(x, y - vScrollBar1.Value, image.Width, image.Height),
+                        avatar = avatar
+                    });
 
                 maxheight = Math.Max(maxheight, image.Height);
                 if (0 < x && width + image.Width <= x)
@@ -73,6 +91,32 @@ namespace PCRTimeline
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             tabControl.Invalidate();
+        }
+
+        private void tabPage_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (prevPosition != e.Location)
+            {
+                prevPosition = e.Location;
+                toolTipTime = 0;
+                nameToolTip.Hide(this);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+
+            if (0 <= toolTipTime)
+            {
+                toolTipTime += timer1.Interval;
+
+                if (nameToolTip.AutomaticDelay < toolTipTime)
+                {
+                    var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
+                    nameToolTip.Show($"({mouse.X},{mouse.Y})", this, mouse.X, mouse.Y);
+                    toolTipTime = -1;
+                }
+            }
         }
     }
 }

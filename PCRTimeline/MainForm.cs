@@ -41,18 +41,39 @@ namespace PCRTimeline
                     name = file,
                     image = (new Bitmap(Image.FromFile(file), new Size(IconSize, IconSize)))
                 });
-                avatarlist.Last().SetSkill();
+//                avatarlist.Last().SetSkill();
             }
 
             for (int i = 0; i < 5; i++)
             {
-                battlerlist.Add(new Battler() { avatar = avatarlist[i] });
+                battlerlist.Add(new Battler(avatarlist[i]));
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {
-            if (this.DesignMode) return;
+        {/*
+            Avatar avatar = new Avatar()
+            {
+                name = "sample",
+                aliasName = "ss",
+                position = 1,
+
+                prevavatar = "abc",
+                nextavatar = "def",
+
+                actionOrder = "D12[A12]"
+
+            };
+
+
+           //XMLファイルに保存する
+            System.Xml.Serialization.XmlSerializer serializer1 =
+                new System.Xml.Serialization.XmlSerializer(typeof(Avatar));
+            System.IO.StreamWriter sw = new System.IO.StreamWriter(
+                @"Data\sample.xml", false, new System.Text.UTF8Encoding(false));
+            serializer1.Serialize(sw, avatar);
+            sw.Close();
+            */
 
             AvatarLoad();
 

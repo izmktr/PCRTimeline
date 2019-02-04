@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
@@ -35,6 +36,8 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.nameToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -59,30 +62,31 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.vScrollBar1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(278, 235);
+            this.tabPage1.Size = new System.Drawing.Size(278, 232);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "All";
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Paint += new System.Windows.Forms.PaintEventHandler(this.CharaForm_Paint);
+            this.tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tabPage_MouseMove);
             // 
             // vScrollBar1
             // 
             this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.vScrollBar1.Location = new System.Drawing.Point(258, 3);
             this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(17, 229);
+            this.vScrollBar1.Size = new System.Drawing.Size(17, 226);
             this.vScrollBar1.TabIndex = 0;
             this.vScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
             // 
             // tabPage2
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(278, 235);
+            this.tabPage2.Size = new System.Drawing.Size(278, 232);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "前衛";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -90,10 +94,10 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(278, 235);
+            this.tabPage3.Size = new System.Drawing.Size(278, 232);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "中衛";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -101,10 +105,10 @@
             // 
             // tabPage4
             // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(278, 235);
+            this.tabPage4.Size = new System.Drawing.Size(278, 232);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "後衛";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -112,14 +116,23 @@
             // 
             // tabPage5
             // 
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(278, 235);
+            this.tabPage5.Size = new System.Drawing.Size(278, 232);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "その他";
             this.tabPage5.UseVisualStyleBackColor = true;
             this.tabPage5.Paint += new System.Windows.Forms.PaintEventHandler(this.CharaForm_Paint);
+            // 
+            // nameToolTip
+            // 
+            this.nameToolTip.AutomaticDelay = 2000;
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // CharaForm
             // 
@@ -143,5 +156,7 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.VScrollBar vScrollBar1;
+        private System.Windows.Forms.ToolTip nameToolTip;
+        private System.Windows.Forms.Timer timer1;
     }
 }

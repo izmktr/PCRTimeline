@@ -7,45 +7,34 @@ using System.Threading.Tasks;
 
 namespace PCRTimeline
 {
-    public class Skill
-    {
-        public float acttime;
-        public float dalay;
-        public Buff buff;
-
-        public float AllTime { get { return acttime + dalay; } }
-    }
-
     public class Buff
     {
         public float delay;
         public float time;
     }
 
+    public class Skill
+    {
+        public string type;
+        public string name;
+        public int acttime;
+        public int interval;
+    }
+
     public class Avatar
     {
         public string name;
         public string aliasName;
-        public Image image;
         public int position;
 
-        public List<Skill> timeline = new List<Skill>();
+        public string prevavatar;
+        public string nextavatar;
 
-        public void SetSkill()
-        {
-            float time = 0.0f;
-            for (; time < 90f; )
-            {
-                timeline.Add(new Skill()
-                {
-                    acttime = 4f,
-                    dalay = 3.5f                    
-                }
-                );
+        public List<Skill> Skill = new List<Skill>();
 
-                time += 7.5f;
-            }
-        }
+        public string actionOrder;
 
+        [System.Xml.Serialization.XmlIgnore]
+        public Image image;
     }
 }

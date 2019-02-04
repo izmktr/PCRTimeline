@@ -19,6 +19,7 @@ namespace PCRTimeline
         {
             public Rectangle rect;
 
+            public bool start;
         }
         List<Rectangle> clickablepoint = new List<Rectangle>();
 
@@ -55,19 +56,20 @@ namespace PCRTimeline
 
             foreach (var battler in battlerlist)
             {
+                /*
                 Image image = battler.avatar.image;
 
                 //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
                 g.DrawImage(image, 0, y, image.Width, image.Height);
 
                 float time = 0f;
-                foreach (var item in battler.avatar.timeline)
+                foreach (var item in battler.timeline)
                 {
                     int x = (int) time * secondsize + IconSize;
                     int width = (int) item.acttime * secondsize;
                     g.FillRectangle(Brushes.LightBlue, x, y + 4, width, image.Height - 16);
                     g.DrawRectangle(Pens.Black, x, y + 4, width, image.Height - 16);
-                    time += item.AllTime;
+                    time += item.acttime + item.interval;
 
                     clickablepoint.Add(new Rectangle(x - clickband / 2, y + 4, clickband, image.Height - 16));
                     clickablepoint.Add(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16));
@@ -75,6 +77,7 @@ namespace PCRTimeline
                 }
 
                 y += image.Height;
+                */
             }
 
         }
@@ -90,6 +93,31 @@ namespace PCRTimeline
                 }
             }
             this.Cursor = Cursors.Default;
+        }
+
+        private void TimelineForm_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+
+            }
+        }
+
+        private void TimelineForm_MouseUp(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void TimelineForm_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                System.Drawing.Point p = System.Windows.Forms.Cursor.Position;
+
+                //指定した画面上の座標位置にコンテキストメニューを表示する
+                this.contextMenuStrip1.Show(p);
+            }
+
         }
     }
 }
