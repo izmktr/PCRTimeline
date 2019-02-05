@@ -74,6 +74,7 @@
       <DependentUpon>TimelineForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Win32ImageList.cs" />
+    <Compile Include="XmlWrite.cs" />
     <EmbeddedResource Include="CharaForm.resx">
       <DependentUpon>CharaForm.cs</DependentUpon>
     </EmbeddedResource>

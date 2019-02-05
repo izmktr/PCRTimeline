@@ -14,14 +14,20 @@ namespace PCRTimeline
         internal int scope = 2;
         int[] secondsizearray = { 4, 8, 16, 32, 64 };
 
+        DragPoint drag = null;
 
         class DragPoint
         {
             public Rectangle rect;
-
             public bool start;
+
+            public DragPoint(Rectangle rect, bool start)
+            {
+                this.rect = rect;
+                this.start = start;
+            }
         }
-        List<Rectangle> clickablepoint = new List<Rectangle>();
+        List<DragPoint> clickablepoint = new List<DragPoint>();
 
         public TimelineForm()
         {
@@ -34,6 +40,7 @@ namespace PCRTimeline
             int secondsize = secondsizearray[scope];
             const int timelinesize = 16;
             const int clickband = 6;
+            float limittime = 90f;
 
             clickablepoint.Clear();
 
@@ -43,7 +50,7 @@ namespace PCRTimeline
             g.FillRectangle(Brushes.White, new Rectangle(0, y, Width, timelinesize));
             for (int i = 0; i < 90; i++)
             {
-                int x = IconSize + i * secondsize;
+                int x = IconSize + i * secondsize - this.hScrollBar1.Value;
                 var pen = i % 10 == 0 ? Pens.Black : i % 5 == 0 ? Pens.Gray : Pens.LightGray;
                 g.DrawLine(pen, new Point(x, y + timelinesize), new Point(x, Height));
 
@@ -56,37 +63,68 @@ namespace PCRTimeline
 
             foreach (var battler in battlerlist)
             {
-                /*
                 Image image = battler.avatar.image;
-
-                //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
-                g.DrawImage(image, 0, y, image.Width, image.Height);
 
                 float time = 0f;
                 foreach (var item in battler.timeline)
                 {
-                    int x = (int) time * secondsize + IconSize;
-                    int width = (int) item.acttime * secondsize;
-                    g.FillRectangle(Brushes.LightBlue, x, y + 4, width, image.Height - 16);
+                    int x = (int) (time * secondsize + IconSize) - this.hScrollBar1.Value;
+                    int width = (int) (item.acttime * secondsize);
+
+
+                    var brush = GetBrush(item);
+                    g.FillRectangle(brush, x, y + 4, width, image.Height - 16);
                     g.DrawRectangle(Pens.Black, x, y + 4, width, image.Height - 16);
+
+                    if (item.darty)
+                    {
+                        g.DrawRectangle(Pens.Black, x - 1, y + 4 - 1, width + 2, image.Height - 16 + 2);
+                    }
+
+                    int intervalwidth = (int)(item.interval * secondsize);
+                    clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16), true));
+                    clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width + intervalwidth, y + 4, clickband, image.Height - 16), false));
+
                     time += item.acttime + item.interval;
 
-                    clickablepoint.Add(new Rectangle(x - clickband / 2, y + 4, clickband, image.Height - 16));
-                    clickablepoint.Add(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16));
-
+                    if (limittime < time) break;
                 }
 
+                //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
+                g.DrawImage(image, 0, y, image.Width, image.Height);
+
                 y += image.Height;
-                */
             }
 
+
+        }
+
+        private Brush GetBrush(ISkill skill)
+        {
+            switch (skill.Type)
+            {
+                case SkillType.Opening:
+                    return Brushes.White;
+                case SkillType.Attack:
+                    return Brushes.LightBlue;
+                case SkillType.Skill1:
+                    return Brushes.Orange;
+                case SkillType.Skill2:
+                    return Brushes.LightPink;
+                case SkillType.UnionBurst:
+                    return Brushes.Red;
+                case SkillType.Bind:
+                    return Brushes.DarkGray;
+                default:
+                    return Brushes.White;
+            }
         }
 
         private void TimelineForm_MouseMove(object sender, MouseEventArgs e)
         {
-            foreach (var rect in clickablepoint)
+            foreach (var click in clickablepoint)
             {
-                if (rect.Contains(e.X, e.Y))
+                if (click.rect.Contains(e.X, e.Y))
                 {
                     this.Cursor = Cursors.SizeWE;
                     return;
@@ -99,7 +137,6 @@ namespace PCRTimeline
         {
             if (e.Button == MouseButtons.Left)
             {
-
             }
         }
 
@@ -118,6 +155,11 @@ namespace PCRTimeline
                 this.contextMenuStrip1.Show(p);
             }
 
+        }
+
+        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            Invalidate();
         }
     }
 }

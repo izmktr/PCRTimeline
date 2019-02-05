@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Avatar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <name>ペコリーヌ</name>
+  <aliasName>peko</aliasName>
+  <position>1</position>
+  <prevavatar>kaori</prevavatar>
+  <nextavatar>nozomi</nextavatar>
+  <skill>
+    <skill>
+      <type>Opening</type>
+      <name>開幕</name>
+      <acttime>0</acttime>
+      <interval>4</interval>
+    </skill>
+    <skill>
+      <type>Attack</type>
+      <name>通常攻撃</name>
+      <acttime>2.5</acttime>
+      <interval>4</interval>
+    </skill>
+    <skill>
+      <type>Skill1</type>
+      <name>ランチタイム</name>
+      <acttime>4.5</acttime>
+      <interval>4</interval>
+    </skill>
+    <skill>
+      <type>Skill2</type>
+      <name>フォールスラッシュ</name>
+      <acttime>2.5</acttime>
+      <interval>4</interval>
+    </skill>
+    <skill>
+      <type>UnionBurst</type>
+      <name>プリンセスストライク</name>
+      <acttime>0.1</acttime>
+      <interval>4</interval>
+    </skill>
+  </skill>
+  <actionOrder>O21[AA2A1]</actionOrder>
+</Avatar>

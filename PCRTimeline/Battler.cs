@@ -8,22 +8,22 @@ namespace PCRTimeline
 {
     class Battler
     {
-        public Avatar avatar;
+        public Avatar avatar = null;
         public List<ISkill> timeline = new List<ISkill>();
 
 
         public Battler(Avatar avatar)
         {
-            for (float time = 0.0f; time < 120f;)
-            {
-                timeline.Add(new CustomSkill()
-                {
-                    acttime = 4f,
-                    interval = 3.5f
-                }
-                );
+            this.avatar = avatar;
 
-                time += 7.5f;
+            float time = 0.0f;
+            foreach(var skill in avatar.ActionOrder())
+            {
+                if (skill == null) break;
+                if (120f < time) break;
+
+                timeline.Add(new CustomSkill(skill));
+                time += skill.acttime + skill.interval;
             }
         }
     }

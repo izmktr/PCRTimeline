@@ -45,9 +45,15 @@ namespace PCRTimeline
             {
                 Image image = avatar.image;
 
+                if (0 < x && width <= x + image.Width)
+                {
+                    x = 0;
+                    y += maxheight;
+                    maxheight = 0;
+                }
+
                 //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
                 e.Graphics.DrawImage(image, x, y - vScrollBar1.Value, image.Width, image.Height);
-                x += image.Width;
 
                 clicklist.Add(
                     new ClickableObject()
@@ -56,13 +62,8 @@ namespace PCRTimeline
                         avatar = avatar
                     });
 
+                x += image.Width;
                 maxheight = Math.Max(maxheight, image.Height);
-                if (0 < x && width + image.Width <= x)
-                {
-                    x = 0;
-                    y += maxheight;
-                    maxheight = 0;
-                }
             }
 
             vScrollBar1.Maximum = y + maxheight;
@@ -113,7 +114,7 @@ namespace PCRTimeline
                 if (nameToolTip.AutomaticDelay < toolTipTime)
                 {
                     var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
-                    nameToolTip.Show($"({mouse.X},{mouse.Y})", this, mouse.X, mouse.Y);
+//                    nameToolTip.Show($"({mouse.X},{mouse.Y})", this, mouse.X, mouse.Y);
                     toolTipTime = -1;
                 }
             }

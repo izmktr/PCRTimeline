@@ -45,6 +45,7 @@
             this.hScrollBar1.Name = "hScrollBar1";
             this.hScrollBar1.Size = new System.Drawing.Size(284, 17);
             this.hScrollBar1.TabIndex = 0;
+            this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
             // 
             // contextMenuStrip1
             // 
@@ -54,24 +55,24 @@
             this.データを追加ToolStripMenuItem,
             this.データを削除ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 116);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(134, 70);
             // 
             // リセットToolStripMenuItem
             // 
             this.リセットToolStripMenuItem.Name = "リセットToolStripMenuItem";
-            this.リセットToolStripMenuItem.Size = new System.Drawing.Size(210, 28);
+            this.リセットToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.リセットToolStripMenuItem.Text = "リセット";
             // 
             // データを追加ToolStripMenuItem
             // 
             this.データを追加ToolStripMenuItem.Name = "データを追加ToolStripMenuItem";
-            this.データを追加ToolStripMenuItem.Size = new System.Drawing.Size(210, 28);
+            this.データを追加ToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.データを追加ToolStripMenuItem.Text = "データを追加";
             // 
             // データを削除ToolStripMenuItem
             // 
             this.データを削除ToolStripMenuItem.Name = "データを削除ToolStripMenuItem";
-            this.データを削除ToolStripMenuItem.Size = new System.Drawing.Size(210, 28);
+            this.データを削除ToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.データを削除ToolStripMenuItem.Text = "データを削除";
             // 
             // TimelineForm

@@ -31,18 +31,26 @@ namespace PCRTimeline
 
         void AvatarLoad()
         {
+            //XMLファイルから読み込む
+            System.Xml.Serialization.XmlSerializer serializer1 =
+                new System.Xml.Serialization.XmlSerializer(typeof(Avatar));
+            System.IO.StreamReader sr = new System.IO.StreamReader(
+                @"Data\sample.xml", new System.Text.UTF8Encoding(false));
+            Avatar avatar = (Avatar)serializer1.Deserialize(sr);
+            sr.Close();
+
+
             const string path = @"Data\Icon\";
             string[] files = System.IO.Directory.GetFiles(path, "*.png", System.IO.SearchOption.AllDirectories);
 
             foreach (var file in files)
             {
-                avatarlist.Add(new Avatar()
-                {
-                    name = file,
-                    image = (new Bitmap(Image.FromFile(file), new Size(IconSize, IconSize)))
-                });
-//                avatarlist.Last().SetSkill();
+                Avatar av = avatar.Copy();
+                av.image = new Bitmap(Image.FromFile(file), new Size(IconSize, IconSize));
+
+                avatarlist.Add(av);
             }
+
 
             for (int i = 0; i < 5; i++)
             {
@@ -51,29 +59,8 @@ namespace PCRTimeline
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {/*
-            Avatar avatar = new Avatar()
-            {
-                name = "sample",
-                aliasName = "ss",
-                position = 1,
-
-                prevavatar = "abc",
-                nextavatar = "def",
-
-                actionOrder = "D12[A12]"
-
-            };
-
-
-           //XMLファイルに保存する
-            System.Xml.Serialization.XmlSerializer serializer1 =
-                new System.Xml.Serialization.XmlSerializer(typeof(Avatar));
-            System.IO.StreamWriter sw = new System.IO.StreamWriter(
-                @"Data\sample.xml", false, new System.Text.UTF8Encoding(false));
-            serializer1.Serialize(sw, avatar);
-            sw.Close();
-            */
+        {
+            XmlWrite.SampleWrite();
 
             AvatarLoad();
 

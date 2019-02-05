@@ -10,6 +10,7 @@ namespace PCRTimeline
     {
         float acttime { get; set; }
         float interval { get; set; }
+        SkillType Type { get; }
 
         bool darty { get; }
     }
@@ -23,6 +24,8 @@ namespace PCRTimeline
 
         public float AllTime { get { return acttime + interval; } }
 
+        public SkillType Type { get { return SkillType.Bind; } }
+
         public bool darty { get { return false; } }
     }
 
@@ -35,9 +38,26 @@ namespace PCRTimeline
 
         public bool darty { get; private set; }
 
+        public SkillType Type { get { return skill.type; } }
+
         public OriginalSkill original;
+        private Skill skill;
+
+        public CustomSkill(Skill skill)
+        {
+            this.skill = skill;
+            Reset();
+        }
+
+        private void Reset()
+        {
+            this.acttime = skill.acttime;
+            this.interval = skill.interval;
+            this.darty = false;
+        }
     }
 
+    /*
     public class AdditionalSkill : ISkill
     {
         public float acttime { get; set; }
@@ -47,6 +67,7 @@ namespace PCRTimeline
 
         public bool darty { get { return true; } }
     }
+    */
 
 
 }
