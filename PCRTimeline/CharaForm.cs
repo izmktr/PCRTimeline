@@ -22,9 +22,11 @@ namespace PCRTimeline
         List<ClickableObject> clicklist = new List<ClickableObject>();
         
         int beforetab = 0;
+        internal List<Battler> battlelist;
 
         public CharaForm()
         {
+            DoubleBuffered = true;
             InitializeComponent();
         }
 
@@ -116,6 +118,27 @@ namespace PCRTimeline
                     var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
 //                    nameToolTip.Show($"({mouse.X},{mouse.Y})", this, mouse.X, mouse.Y);
                     toolTipTime = -1;
+                }
+            }
+        }
+
+        private void tabPage_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs mouse = (MouseEventArgs)e;
+
+            var f = clicklist.Find(n => n.rect.Contains(mouse.Location));
+            if (f != null)
+            {
+                var findindex = battlelist.FindIndex(n => n.avatar == f.avatar);
+                if (0 <= findindex) { battlelist.RemoveAt(findindex); }
+                else { battlelist.Add(new Battler(f.avatar)); }
+
+                foreach (var form in Application.OpenForms)
+                {
+                    if (form is TimelineForm)
+                    {
+                        ((TimelineForm)form).Invalidate();
+                    }                 
                 }
             }
         }

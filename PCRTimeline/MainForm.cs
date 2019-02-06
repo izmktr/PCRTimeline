@@ -74,6 +74,7 @@ namespace PCRTimeline
         {
             chara = new CharaForm();
             chara.avatarlist = avatarlist;
+            chara.battlelist = battlerlist;
             chara.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.DockBottom);
 
             chara.FormClosed += (s, e) => charaToolStripMenuItem.Checked = false;

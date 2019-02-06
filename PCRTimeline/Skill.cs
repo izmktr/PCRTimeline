@@ -12,7 +12,7 @@ namespace PCRTimeline
         float interval { get; set; }
         SkillType Type { get; }
 
-        bool darty { get; }
+        bool darty { get; set; }
     }
 
     public class OriginalSkill : ISkill
@@ -26,7 +26,7 @@ namespace PCRTimeline
 
         public SkillType Type { get { return SkillType.Bind; } }
 
-        public bool darty { get { return false; } }
+        public bool darty { get { return false; } set { } }
     }
 
     public class CustomSkill : ISkill
@@ -36,7 +36,7 @@ namespace PCRTimeline
 
         public float AllTime { get { return acttime + interval; } }
 
-        public bool darty { get; private set; }
+        public bool darty { get; set; }
 
         public SkillType Type { get { return skill.type; } }
 

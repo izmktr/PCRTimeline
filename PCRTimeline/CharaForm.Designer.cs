@@ -69,6 +69,7 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "All";
             this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPage1.Click += new System.EventHandler(this.tabPage_Click);
             this.tabPage1.Paint += new System.Windows.Forms.PaintEventHandler(this.CharaForm_Paint);
             this.tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tabPage_MouseMove);
             // 

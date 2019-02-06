@@ -14,41 +14,53 @@ namespace PCRTimeline
         internal int scope = 2;
         int[] secondsizearray = { 4, 8, 16, 32, 64 };
 
-        DragPoint drag = null;
+        int secondsize { get { return secondsizearray[scope]; } }
 
         class DragPoint
         {
             public Rectangle rect;
             public bool start;
+            public ISkill skill;
 
-            public DragPoint(Rectangle rect, bool start)
+            public DragPoint(Rectangle rect, bool start, ISkill skill)
             {
                 this.rect = rect;
                 this.start = start;
+                this.skill = skill;
             }
         }
         List<DragPoint> clickablepoint = new List<DragPoint>();
 
+        DragPoint drag = null;
+        private float dragvalue;
+        private Point draglocation;
+
         public TimelineForm()
         {
+            DoubleBuffered = true;
             InitializeComponent();
         }
 
         private void TimelineForm_Paint(object sender, PaintEventArgs e)
         {
             const int IconSize = 48;
-            int secondsize = secondsizearray[scope];
             const int timelinesize = 16;
             const int clickband = 6;
             float limittime = 90f;
 
             clickablepoint.Clear();
 
+            int maxvalue = 100 * secondsize - (this.Width - IconSize);
+            if (maxvalue < hScrollBar1.Value)
+            {
+                hScrollBar1.Value = Math.Max(0, maxvalue);
+            }
+
             int y = 0;
             Graphics g = e.Graphics;
 
             g.FillRectangle(Brushes.White, new Rectangle(0, y, Width, timelinesize));
-            for (int i = 0; i < 90; i++)
+            for (int i = 0; i <= 90; i++)
             {
                 int x = IconSize + i * secondsize - this.hScrollBar1.Value;
                 var pen = i % 10 == 0 ? Pens.Black : i % 5 == 0 ? Pens.Gray : Pens.LightGray;
@@ -82,8 +94,8 @@ namespace PCRTimeline
                     }
 
                     int intervalwidth = (int)(item.interval * secondsize);
-                    clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16), true));
-                    clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width + intervalwidth, y + 4, clickband, image.Height - 16), false));
+                    clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16), true, item));
+                    clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width + intervalwidth, y + 4, clickband, image.Height - 16), false, item));
 
                     time += item.acttime + item.interval;
 
@@ -96,7 +108,8 @@ namespace PCRTimeline
                 y += image.Height;
             }
 
-
+            hScrollBar1.Maximum = 100 * secondsize;
+            hScrollBar1.LargeChange = this.Width;
         }
 
         private Brush GetBrush(ISkill skill)
@@ -122,6 +135,28 @@ namespace PCRTimeline
 
         private void TimelineForm_MouseMove(object sender, MouseEventArgs e)
         {
+            ChangeCursor(e);
+
+            if (drag != null)
+            {
+                float value = dragvalue + (e.Location.X - draglocation.X) / (float) secondsize;
+                if (value < 0.25f) value = 0.25f;
+                if (drag.start)
+                {
+                    drag.skill.acttime = value;
+                }
+                else
+                {
+                    drag.skill.interval = value;
+                }
+                drag.skill.darty = true;
+
+                Invalidate();
+            }
+        }
+
+        private void ChangeCursor(MouseEventArgs e)
+        {
             foreach (var click in clickablepoint)
             {
                 if (click.rect.Contains(e.X, e.Y))
@@ -137,12 +172,21 @@ namespace PCRTimeline
         {
             if (e.Button == MouseButtons.Left)
             {
+                drag = clickablepoint.Find(n => n.rect.Contains(e.Location));
+                if (drag != null)
+                {
+                    dragvalue = drag.start ? drag.skill.acttime : drag.skill.interval;
+                    draglocation = e.Location;
+                }
             }
         }
 
         private void TimelineForm_MouseUp(object sender, MouseEventArgs e)
         {
-
+            if (e.Button == MouseButtons.Left)
+            {
+                drag = null;
+            }
         }
 
         private void TimelineForm_MouseClick(object sender, MouseEventArgs e)
