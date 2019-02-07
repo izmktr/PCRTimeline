@@ -253,6 +253,27 @@ namespace PCRTimeline
             }
 
         }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void exportImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string filename = "export.png";
+            int secondsize = 8;
+
+            Bitmap bitmap = new Bitmap(IconSize + 95 * secondsize, IconSize * battlerlist.Count);
+            using (var g = Graphics.FromImage(bitmap))
+            {
+                g.FillRectangle(Brushes.White, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+                timeline.DrawTimeline(g, IconSize, secondsize, 0, bitmap.Size);
+            }
+
+            bitmap.Save(filename, System.Drawing.Imaging.ImageFormat.Png);
+
+        }
     }
 }
 
