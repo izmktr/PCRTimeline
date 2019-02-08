@@ -45,6 +45,7 @@ namespace PCRTimeline
         private void TimelineForm_Paint(object sender, PaintEventArgs e)
         {
             const int IconSize = 48;
+            const int timelinesize = 16;
             const int clickband = 6;
             float limittime = 90f;
 

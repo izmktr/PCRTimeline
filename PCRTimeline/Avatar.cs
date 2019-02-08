@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace PCRTimeline
 {
-    public class Buff
+    public class Effect
     {
         public float delay;
-        public float time;
+        public float duration;
     }
 
     public class Skill
@@ -19,6 +19,8 @@ namespace PCRTimeline
         public string name;
         public float acttime;
         public float interval;
+
+        public Effect effect;
     }
 
     public enum SkillType
@@ -27,8 +29,12 @@ namespace PCRTimeline
         Attack,
         Skill1,
         Skill2,
+        Skill3,
+        Skill4,
+        Skill5,
         UnionBurst,
         Bind,
+        Dead,
     }
 
     public class Avatar
@@ -88,6 +94,12 @@ namespace PCRTimeline
                     return skill.First(n => n.type == SkillType.Skill1);
                 case '2':
                     return skill.First(n => n.type == SkillType.Skill2);
+                case '3':
+                    return skill.First(n => n.type == SkillType.Skill3);
+                case '4':
+                    return skill.First(n => n.type == SkillType.Skill4);
+                case '5':
+                    return skill.First(n => n.type == SkillType.Skill5);
                 case 'o':
                     return skill.First(n => n.type == SkillType.Opening);
                 case 'a':

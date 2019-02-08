@@ -67,6 +67,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Skill.cs" />
+    <Compile Include="TimelineSketch.cs" />
     <Compile Include="TimelineForm.cs">
       <SubType>Form</SubType>
     </Compile>
