@@ -74,18 +74,23 @@ namespace PCRTimeline
                     int x = (int)(time * secondsize + IconSize) - this.hScrollBar1.Value;
                     int width = (int)(item.acttime * secondsize);
 
-
                     var brush = GetBrush(item);
-                    g.FillRectangle(brush, x, y + 4, width, image.Height - 16);
-                    g.DrawRectangle(Pens.Black, x, y + 4, width, image.Height - 16);
-
-                    if (item.darty)
+                    if (0 < width)
                     {
-                        g.DrawRectangle(Pens.Black, x - 1, y + 4 - 1, width + 2, image.Height - 16 + 2);
+                        g.FillRectangle(brush, x, y + 4, width, image.Height - 16);
+                        g.DrawRectangle(Pens.Black, x, y + 4, width, image.Height - 16);
+
+                        if (item.darty)
+                        {
+                            g.DrawRectangle(Pens.Black, x - 1, y + 4 - 1, width + 2, image.Height - 16 + 2);
+                        }
                     }
 
                     int intervalwidth = (int)(item.interval * secondsize);
-                    clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16), true, item));
+                    if (0 < width)
+                    {
+                        clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16), true, item));
+                    }
                     clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width + intervalwidth, y + 4, clickband, image.Height - 16), false, item));
 
                     time += item.acttime + item.interval;
