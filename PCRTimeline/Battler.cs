@@ -9,7 +9,7 @@ namespace PCRTimeline
     class Battler
     {
         public Avatar avatar = null;
-        public List<ISkill> timeline = new List<ISkill>();
+        public List<CustomSkill> timeline = new List<CustomSkill>();
 
 
         public Battler(Avatar avatar)

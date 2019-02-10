@@ -9,8 +9,20 @@ namespace PCRTimeline
 {
     public class Effect
     {
+        public BuffEffectType type = BuffEffectType.None;
+        public int value;
         public float delay;
         public float duration;
+
+        internal Effect Copy()
+        {
+            var ret = new Effect();
+            ret.type = type;
+            ret.value = value;
+            ret.delay = delay;
+            ret.duration = duration;
+            return ret;
+        }
     }
 
     public class Skill
@@ -21,6 +33,18 @@ namespace PCRTimeline
         public float interval;
 
         public Effect effect;
+
+        internal Skill Copy()
+        {
+            var ret = new Skill();
+            ret.type = type;
+            ret.name = name;
+            ret.acttime = acttime;
+            ret.interval = interval;
+            ret.effect = effect?.Copy();
+
+            return ret;
+        }
     }
 
     public enum SkillType
@@ -37,11 +61,26 @@ namespace PCRTimeline
         Dead,
     }
 
+    public enum BuffEffectType
+    {
+        None,
+        AtkFriend,
+        AtkEnemy,
+        DefFriend,
+        DefEnemy,
+        SpdFriend,
+        SpdEnemy,
+        HealFriend,
+        OtherEnemy,
+    }
+
     public class Avatar
     {
         public string name;
         public string aliasName;
         public int position;
+
+        public string icon;
 
         public string prevavatar;
         public string nextavatar;

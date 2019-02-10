@@ -9,12 +9,12 @@ namespace PCRTimeline
     class SkillSketch
     {
         public int index;
-        public Skill skill;
+        public Skill skill = null;
 
-        public SkillSketch(int index, ISkill skill1)
+        public SkillSketch(int index, CustomSkill skill)
         {
             this.index = index;
-  //          this.skill1 = skill1;
+            this.skill = skill.modify;
         }
     }
 
@@ -29,9 +29,31 @@ namespace PCRTimeline
         public List<BattlerSketch> blist = new List<BattlerSketch>();
         
         [System.Xml.Serialization.XmlIgnore]
-        public List<Avatar> avatarlist;
+        public List<Avatar> avatarlist = null;
 
-        public void Serialize(List<Battler> battlelist)
+        static void Save(TimelineSketch sketch, string filename)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(TimelineSketch));
+            System.IO.StreamWriter sw = new System.IO.StreamWriter(
+                filename, false, new System.Text.UTF8Encoding(false));
+            serializer.Serialize(sw, sketch);
+            sw.Close();
+        }
+
+        static TimelineSketch Load(string filename)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(TimelineSketch));
+            System.IO.StreamReader sr = new System.IO.StreamReader(
+                filename, new System.Text.UTF8Encoding(false));
+            TimelineSketch sketch = (TimelineSketch)serializer.Deserialize(sr);
+            sr.Close();
+
+            return sketch;
+        }
+
+        public void Serialize(List<Battler> battlelist, string filename)
         {
             blist.Clear();
 
@@ -47,17 +69,35 @@ namespace PCRTimeline
                     {
                         bsketch.skillsketch.Add(new SkillSketch(index, skill));
                     }
-                    if (!skill.basic) index++;
+                    index++;
                 }
             }
-
-
         }
 
-        public List<Battler> DeSerialize()
+        public List<Battler> DeSerialize(string filename)
         {
             var battlelist = new List<Battler>();
 
+            foreach (var item in blist)
+            {
+                var avatar = avatarlist.Find(n => n.aliasName == item.aliasName);
+                var battler = new Battler(avatar);
+
+                foreach (var ssketch in item.skillsketch)
+                {
+                    var battlerskill = battler.timeline[ssketch.index];
+                    if (ssketch.skill.type == battlerskill.Type)
+                    {
+                        battlerskill.modify = ssketch.skill;
+                    }
+                    else
+                    {
+                        var insertskill = new CustomSkill(null);
+                        insertskill.modify = ssketch.skill;
+                        battler.timeline.Insert(ssketch.index, insertskill);
+                    }
+                }
+            }
             return battlelist;
         }
 

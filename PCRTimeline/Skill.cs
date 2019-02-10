@@ -6,56 +6,77 @@ using System.Threading.Tasks;
 
 namespace PCRTimeline
 {
-    interface ISkill
+    public class CustomSkill
     {
-        float acttime { get; set; }
-        float interval { get; set; }
-        SkillType Type { get; }
+        Skill original;
+        public Skill modify;
 
-        bool darty { get; set; }
-        bool basic { get; }
-    }
+        public void CreateModify()
+        {
+            if (modify == null) modify = original.Copy();
+        }
 
-    public class CustomSkill : ISkill
-    {
-        public float acttime { get; set; }
-        public float interval { get; set; }
+        public float acttime => modify != null ? modify.acttime : original.acttime;
+        public float interval => modify != null ? modify.interval : original.interval;
 
         public float AllTime { get { return acttime + interval; } }
 
-        public bool darty { get; set; }
-        public SkillType Type { get { return skill.type; } }
-        public bool basic { get { return true; } }
+        public bool darty => modify != null;
+        public SkillType Type => original.type;
+        public bool basic => original == null || original.type == SkillType.UnionBurst;
 
-        private Skill skill;
+        public int skillNo
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case SkillType.Skill1:
+                        return 1;
+                    case SkillType.Skill2:
+                        return 2;
+                    case SkillType.Skill3:
+                        return 3;
+                    case SkillType.Skill4:
+                        return 4;
+                    case SkillType.Skill5:
+                        return 5;
+                    default:
+                        return 0;
+                }
+            }
+        }
+
+        public bool IsSkill
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case SkillType.Skill1:
+                    case SkillType.Skill2:
+                    case SkillType.Skill3:
+                    case SkillType.Skill4:
+                    case SkillType.Skill5:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }
+        public string name => original.name;
+
+        public Effect effect => modify != null ? modify.effect : original.effect;
 
         public CustomSkill(Skill skill)
         {
-            this.skill = skill;
-            Reset();
+            original = skill;
         }
 
         private void Reset()
         {
-            this.acttime = skill.acttime;
-            this.interval = skill.interval;
-            this.darty = false;
+            modify = null;
         }
     }
-
-    public class AdditionalSkill : ISkill
-    {
-        public float acttime { get; set; }
-        public float interval { get; set; }
-
-        public float AllTime { get { return acttime + interval; } }
-
-        public bool darty { get {return true; } set { } }
-        public SkillType Type { get; set; }
-        public bool basic { get { return false; } }
-
-
-    }
-
 
 }

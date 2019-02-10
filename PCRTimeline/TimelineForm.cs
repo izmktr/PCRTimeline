@@ -17,16 +17,25 @@ namespace PCRTimeline
 
         int secondsize { get { return secondsizearray[scope]; } }
 
+        enum TimelineType
+        {
+            None,
+            ActStart,
+            ActEnd,
+            EffectStart,
+            EffectEnd,
+        }
+
         class DragPoint
         {
             public Rectangle rect;
-            public bool start;
-            public ISkill skill;
+            public TimelineType dragpoint;
+            public CustomSkill skill;
 
-            public DragPoint(Rectangle rect, bool start, ISkill skill)
+            public DragPoint(Rectangle rect, TimelineType dragpoint, CustomSkill skill)
             {
                 this.rect = rect;
-                this.start = start;
+                this.dragpoint = dragpoint;
                 this.skill = skill;
             }
         }
@@ -45,7 +54,6 @@ namespace PCRTimeline
         private void TimelineForm_Paint(object sender, PaintEventArgs e)
         {
             const int IconSize = 48;
-            const int timelinesize = 16;
             const int clickband = 6;
             float limittime = 90f;
 
@@ -78,23 +86,54 @@ namespace PCRTimeline
                     if (0 < width)
                     {
                         g.FillRectangle(brush, x, y + 4, width, image.Height - 16);
-                        g.DrawRectangle(Pens.Black, x, y + 4, width, image.Height - 16);
-
+                        g.DrawRectangle(Pens.DarkGray, x, y + 4, width, image.Height - 16);
                         if (item.darty)
                         {
-                            g.DrawRectangle(Pens.Black, x - 1, y + 4 - 1, width + 2, image.Height - 16 + 2);
+                            g.DrawRectangle(Pens.DarkGray, x - 1, y + 4 - 1, width + 2, image.Height - 16 + 2);
+                        }
+
+                        if (item.IsSkill)
+                        {
+                            var clip = g.ClipBounds;
+                            g.SetClip(new Rectangle(x, y + 4, width, image.Height - 16));
+                            g.DrawString(item.name, this.Font, Brushes.Black, x + 1, y + 4 + 1);
+                            g.SetClip(clip);
                         }
                     }
 
                     int intervalwidth = (int)(item.interval * secondsize);
                     if (0 < width)
                     {
-                        clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16), true, item));
+                        clickablepoint.Add(new DragPoint(
+                            new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16), TimelineType.ActStart, item
+                            ));
                     }
-                    clickablepoint.Add(new DragPoint(new Rectangle(x - clickband / 2 + width + intervalwidth, y + 4, clickband, image.Height - 16), false, item));
+                    clickablepoint.Add(new DragPoint(
+                        new Rectangle(x - clickband / 2 + width + intervalwidth, y + 4, clickband, image.Height - 16), TimelineType.ActEnd, item)
+                        );
 
                     time += item.acttime + item.interval;
 
+                    if (limittime < time) break;
+                }
+
+
+                time = 0f;
+                var shiftHeight = new int[10];
+                foreach (var item in battler.timeline)
+                {
+                    int x = (int)(time * secondsize + IconSize) - this.hScrollBar1.Value;
+                    if (item.effect != null && 0 < item.effect.duration)
+                    {
+                        int px = (int)(x + item.effect.delay * secondsize);
+                        int py = y + 16 + item.skillNo * 6 + shiftHeight[item.skillNo] * 3;
+                        var rect = new Rectangle(px, py, (int)(item.effect.duration * secondsize), image.Height - 32);
+                        g.FillRectangle(Brushes.LightYellow, rect);
+                        g.DrawRectangle(Pens.DarkGray, rect);
+
+                        shiftHeight[item.skillNo] = (shiftHeight[item.skillNo] + 1) % 2;
+                    }
+                    time += item.acttime + item.interval;
                     if (limittime < time) break;
                 }
 
@@ -123,7 +162,7 @@ namespace PCRTimeline
             }
         }
 
-        private Brush GetBrush(ISkill skill)
+        private Brush GetBrush(CustomSkill skill)
         {
             switch (skill.Type)
             {
@@ -152,15 +191,25 @@ namespace PCRTimeline
             {
                 float value = dragvalue + (e.Location.X - draglocation.X) / (float) secondsize;
                 if (value < 0.25f) value = 0.25f;
-                if (drag.start)
+                drag.skill.CreateModify();
+
+                switch (drag.dragpoint)
                 {
-                    drag.skill.acttime = value;
+                    case TimelineType.ActStart:
+                        drag.skill.modify.acttime = value;
+                        break;
+                    case TimelineType.ActEnd:
+                        drag.skill.modify.interval = value;
+                        break;
+                    case TimelineType.EffectStart:
+                        drag.skill.effect.delay = value;
+                        break;
+                    case TimelineType.EffectEnd:
+                        drag.skill.effect.duration = value;
+                        break;
+                    default:
+                        break;
                 }
-                else
-                {
-                    drag.skill.interval = value;
-                }
-                drag.skill.darty = true;
 
                 Invalidate();
             }
@@ -186,8 +235,25 @@ namespace PCRTimeline
                 drag = clickablepoint.Find(n => n.rect.Contains(e.Location));
                 if (drag != null)
                 {
-                    dragvalue = drag.start ? drag.skill.acttime : drag.skill.interval;
                     draglocation = e.Location;
+                    switch (drag.dragpoint)
+                    {
+                        case TimelineType.ActStart:
+                            dragvalue = drag.skill.acttime;
+                            break;
+                        case TimelineType.ActEnd:
+                            dragvalue = drag.skill.interval;
+                            break;
+                        case TimelineType.EffectStart:
+                            dragvalue = drag.skill.effect.delay;
+                            break;
+                        case TimelineType.EffectEnd:
+                            dragvalue = drag.skill.effect.duration;
+                            break;
+                        default:
+                            drag = null;
+                            break;
+                    }
                 }
             }
         }

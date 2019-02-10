@@ -31,31 +31,48 @@ namespace PCRTimeline
 
         void AvatarLoad()
         {
-            //XMLファイルから読み込む
-            System.Xml.Serialization.XmlSerializer serializer1 =
-                new System.Xml.Serialization.XmlSerializer(typeof(Avatar));
-            System.IO.StreamReader sr = new System.IO.StreamReader(
-                @"Data\sample.xml", new System.Text.UTF8Encoding(false));
-            Avatar avatar = (Avatar)serializer1.Deserialize(sr);
-            sr.Close();
-
-
-            const string path = @"Data\Icon\";
-            string[] files = System.IO.Directory.GetFiles(path, "*.png", System.IO.SearchOption.AllDirectories);
-
-            foreach (var file in files)
             {
-                Avatar av = avatar.Copy();
-                av.image = new Bitmap(Image.FromFile(file), new Size(IconSize, IconSize));
+                const string path = @"Data\";
+                string[] files = System.IO.Directory.GetFiles(path, "*.xml", System.IO.SearchOption.AllDirectories);
 
-                avatarlist.Add(av);
+                foreach (var file in files)
+                {
+                    //XMLファイルから読み込む
+                    System.Xml.Serialization.XmlSerializer serializer1 =
+                        new System.Xml.Serialization.XmlSerializer(typeof(Avatar));
+                    System.IO.StreamReader sr = new System.IO.StreamReader(
+                        file, new System.Text.UTF8Encoding(false));
+                    Avatar avatar = (Avatar)serializer1.Deserialize(sr);
+                    sr.Close();
+
+                    string iconfile = path + avatar.icon;
+                    if (avatar.icon != null && System.IO.File.Exists(iconfile))
+                    {
+                        avatar.image = new Bitmap(Image.FromFile(iconfile), new Size(IconSize, IconSize));
+                    }
+                    else
+                    {
+                        avatar.image = CreateIcon(avatar);
+                    }
+
+                    avatarlist.Add(avatar);
+                }
             }
 
+        }
 
-            for (int i = 0; i < 5; i++)
+        private Image CreateIcon(Avatar avatar)
+        {
+            Bitmap bitmap = new Bitmap(IconSize, IconSize);
+
+            using (var g = Graphics.FromImage(bitmap))
             {
-                battlerlist.Add(new Battler(avatarlist[i]));
+                g.FillRectangle(Brushes.White, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+                g.DrawRectangle(Pens.LightGray, new Rectangle(0, 0, bitmap.Width - 1, bitmap.Height - 1));
+                g.DrawString(avatar.name, this.Font, Brushes.Black, 2, 2);
             }
+
+            return bitmap;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -272,6 +289,11 @@ namespace PCRTimeline
             }
 
             bitmap.Save(filename, System.Drawing.Imaging.ImageFormat.Png);
+
+        }
+
+        private void insertOpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
         }
     }

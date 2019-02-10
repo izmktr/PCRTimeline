@@ -14,13 +14,14 @@ namespace PCRTimeline
         private Point prevPosition;
         int toolTipTime = 0;
 
-        class ClickableObject{
+        class ClickableObject
+        {
             public Rectangle rect;
             public Avatar avatar;
         }
 
         List<ClickableObject> clicklist = new List<ClickableObject>();
-        
+
         int beforetab = 0;
         internal List<Battler> battlelist;
 
@@ -75,7 +76,7 @@ namespace PCRTimeline
 
         private void CharaForm_Paint(object sender, PaintEventArgs e)
         {
-            
+
             DrawCharactor((TabPage)sender, e);
         }
 
@@ -83,12 +84,13 @@ namespace PCRTimeline
         {
             TabControl tab = (TabControl)sender;
 
-            if (beforetab != tab.SelectedIndex) {
+            if (beforetab != tab.SelectedIndex)
+            {
                 tab.TabPages[beforetab].Controls.Remove(vScrollBar1);
                 tab.TabPages[tab.SelectedIndex].Controls.Add(vScrollBar1);
                 beforetab = tab.SelectedIndex;
             }
-            
+
         }
 
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
@@ -116,7 +118,7 @@ namespace PCRTimeline
                 if (nameToolTip.AutomaticDelay < toolTipTime)
                 {
                     var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
-//                    nameToolTip.Show($"({mouse.X},{mouse.Y})", this, mouse.X, mouse.Y);
+                    //                    nameToolTip.Show($"({mouse.X},{mouse.Y})", this, mouse.X, mouse.Y);
                     toolTipTime = -1;
                 }
             }
@@ -130,17 +132,22 @@ namespace PCRTimeline
             if (f != null)
             {
                 var findindex = battlelist.FindIndex(n => n.avatar == f.avatar);
-                if (0 <= findindex) { battlelist.RemoveAt(findindex); }
-                else { battlelist.Add(new Battler(f.avatar)); }
+                if (0 <= findindex && (Control.ModifierKeys & Keys.Control) != Keys.Control)
+                {
+                    battlelist.RemoveAt(findindex);
+                }
+                else
+                {
+                    battlelist.Add(new Battler(f.avatar));
+                }
 
                 foreach (var form in Application.OpenForms)
                 {
-                    if (form is TimelineForm)
-                    {
-                        ((TimelineForm)form).Invalidate();
-                    }                 
+                    (form as TimelineForm)?.Invalidate();
                 }
             }
+
+
         }
     }
 }
