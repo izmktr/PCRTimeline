@@ -22,6 +22,8 @@ namespace PCRTimeline
         TimelineForm timeline;
         CharaForm chara;
 
+        string currentFilename = "";
+
         int scope = 2;
 
         public MainForm()
@@ -174,11 +176,6 @@ namespace PCRTimeline
 
         }
 
-        private void toolStripLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void splitContainer1_Panel2_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -292,10 +289,92 @@ namespace PCRTimeline
 
         }
 
+        private void fileOpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "tml files (*.tml)|*.tml|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    var filePath = openFileDialog.FileName;
+
+                    var sketch = TimelineSketch.Load(filePath);
+                    sketch.avatarlist = avatarlist;
+                    battlerlist.Clear();
+                    var deSerialize = sketch.DeSerialize();
+                    battlerlist.AddRange(deSerialize);
+                    currentFilename = filePath;
+
+                    timeline.Invalidate();
+                }
+            }
+        }
+
         private void insertOpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "tml files (*.tml)|*.tml|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
 
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    var filePath = openFileDialog.FileName;
+
+                    var sketch = TimelineSketch.Load(filePath);
+                    sketch.avatarlist = avatarlist;
+
+                    var deSerialize = sketch.DeSerialize();
+                    battlerlist.AddRange(deSerialize);
+                    currentFilename = filePath;
+
+                    timeline.battlerlist = battlerlist;
+                    timeline.Invalidate();
+                }
+            }
         }
+
+        private void fileSaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentFilename.Length == 0)
+            {
+                fileSaveAsToolStripMenuItem_Click(sender, e);
+                return;
+            }
+
+            TimelineSketch sketch = new TimelineSketch();
+            sketch.Serialize(battlerlist);
+
+            TimelineSketch.Save(sketch, currentFilename);
+        }
+
+        private void fileSaveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "tml files (*.tml)|*.tml|All files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 1;
+                saveFileDialog.RestoreDirectory = true;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    currentFilename = saveFileDialog.FileName;
+
+                    TimelineSketch sketch = new TimelineSketch();
+                    sketch.Serialize(battlerlist);
+
+                    TimelineSketch.Save(sketch, currentFilename);
+                }
+            }
+        }
+
     }
 }
 

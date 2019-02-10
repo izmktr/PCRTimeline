@@ -6,32 +6,42 @@ using System.Threading.Tasks;
 
 namespace PCRTimeline
 {
-    class SkillSketch
+    public class SkillSketch
     {
         public int index;
-        public Skill skill = null;
+        public Skill skill;
 
         public SkillSketch(int index, CustomSkill skill)
         {
             this.index = index;
             this.skill = skill.modify;
         }
+
+        public SkillSketch()
+        {
+            index = 0;
+            skill = null;
+        }
     }
 
-    class BattlerSketch
+    public class BattlerSketch
     {
         public string aliasName;
         public List<SkillSketch> skillsketch = new List<SkillSketch>();
     }
 
-    class TimelineSketch
+    public class TimelineSketch
     {
         public List<BattlerSketch> blist = new List<BattlerSketch>();
         
         [System.Xml.Serialization.XmlIgnore]
         public List<Avatar> avatarlist = null;
 
-        static void Save(TimelineSketch sketch, string filename)
+        public TimelineSketch()
+        {
+        }
+
+        public static void Save(TimelineSketch sketch, string filename)
         {
             System.Xml.Serialization.XmlSerializer serializer =
                 new System.Xml.Serialization.XmlSerializer(typeof(TimelineSketch));
@@ -41,7 +51,7 @@ namespace PCRTimeline
             sw.Close();
         }
 
-        static TimelineSketch Load(string filename)
+        public static TimelineSketch Load(string filename)
         {
             System.Xml.Serialization.XmlSerializer serializer =
                 new System.Xml.Serialization.XmlSerializer(typeof(TimelineSketch));
@@ -53,7 +63,7 @@ namespace PCRTimeline
             return sketch;
         }
 
-        public void Serialize(List<Battler> battlelist, string filename)
+        public void Serialize(List<Battler> battlelist)
         {
             blist.Clear();
 
@@ -74,7 +84,7 @@ namespace PCRTimeline
             }
         }
 
-        public List<Battler> DeSerialize(string filename)
+        public List<Battler> DeSerialize()
         {
             var battlelist = new List<Battler>();
 
@@ -82,6 +92,7 @@ namespace PCRTimeline
             {
                 var avatar = avatarlist.Find(n => n.aliasName == item.aliasName);
                 var battler = new Battler(avatar);
+                battlelist.Add(battler);
 
                 foreach (var ssketch in item.skillsketch)
                 {

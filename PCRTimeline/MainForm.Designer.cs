@@ -31,6 +31,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileOpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.insertOpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileSaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileSaveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -47,7 +48,6 @@
             this.timelineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.charaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.insertOpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,42 +82,62 @@
             // fileOpenToolStripMenuItem
             // 
             this.fileOpenToolStripMenuItem.Name = "fileOpenToolStripMenuItem";
-            this.fileOpenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileOpenToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+O";
+            this.fileOpenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.fileOpenToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.fileOpenToolStripMenuItem.Text = "開く(&O)";
+            this.fileOpenToolStripMenuItem.Click += new System.EventHandler(this.fileOpenToolStripMenuItem_Click);
+            // 
+            // insertOpenToolStripMenuItem
+            // 
+            this.insertOpenToolStripMenuItem.Name = "insertOpenToolStripMenuItem";
+            this.insertOpenToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+I";
+            this.insertOpenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.insertOpenToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.insertOpenToolStripMenuItem.Text = "追加して開く(&I)";
+            this.insertOpenToolStripMenuItem.Click += new System.EventHandler(this.insertOpenToolStripMenuItem_Click);
             // 
             // fileSaveToolStripMenuItem
             // 
             this.fileSaveToolStripMenuItem.Name = "fileSaveToolStripMenuItem";
-            this.fileSaveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileSaveToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+S";
+            this.fileSaveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.fileSaveToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.fileSaveToolStripMenuItem.Text = "保存(&S)";
+            this.fileSaveToolStripMenuItem.Click += new System.EventHandler(this.fileSaveToolStripMenuItem_Click);
             // 
             // fileSaveAsToolStripMenuItem
             // 
             this.fileSaveAsToolStripMenuItem.Name = "fileSaveAsToolStripMenuItem";
-            this.fileSaveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileSaveAsToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+A";
+            this.fileSaveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.fileSaveAsToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.fileSaveAsToolStripMenuItem.Text = "名前をつけて保存(&A)";
+            this.fileSaveAsToolStripMenuItem.Click += new System.EventHandler(this.fileSaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(212, 6);
             // 
             // exportImageToolStripMenuItem1
             // 
             this.exportImageToolStripMenuItem1.Name = "exportImageToolStripMenuItem1";
-            this.exportImageToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.exportImageToolStripMenuItem1.ShortcutKeyDisplayString = "Ctrl+E";
+            this.exportImageToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
+            this.exportImageToolStripMenuItem1.Size = new System.Drawing.Size(215, 22);
             this.exportImageToolStripMenuItem1.Text = "画像で出力(&E)";
             this.exportImageToolStripMenuItem1.Click += new System.EventHandler(this.exportImageToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.exitToolStripMenuItem.Text = "終了(&X)";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -206,13 +226,6 @@
             this.dockPanel1.Size = new System.Drawing.Size(819, 441);
             this.dockPanel1.TabIndex = 1;
             // 
-            // insertOpenToolStripMenuItem
-            // 
-            this.insertOpenToolStripMenuItem.Name = "insertOpenToolStripMenuItem";
-            this.insertOpenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.insertOpenToolStripMenuItem.Text = "追加して開く(&I)";
-            this.insertOpenToolStripMenuItem.Click += new System.EventHandler(this.insertOpenToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -221,7 +234,7 @@
             this.Controls.Add(this.dockPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainForm";
             this.Text = "PCR Timeline";
             this.Load += new System.EventHandler(this.Form1_Load);

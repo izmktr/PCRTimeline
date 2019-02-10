@@ -14,6 +14,8 @@ namespace PCRTimeline
         internal int scope = 2;
         int[] secondsizearray = { 4, 8, 16, 32, 64 };
         const int timelineheight = 16;
+        const int IconSize = 48;
+        const int clickband = 6;
 
         int secondsize { get { return secondsizearray[scope]; } }
 
@@ -39,11 +41,21 @@ namespace PCRTimeline
                 this.skill = skill;
             }
         }
-        List<DragPoint> clickablepoint = new List<DragPoint>();
+        List<DragPoint> dragablepoint = new List<DragPoint>();
+
+
+        class ClickPoint
+        {
+            public Rectangle rect;
+            public Battler battler;
+            public CustomSkill skill;
+        }
+        List<ClickPoint> clickablepoint = new List<ClickPoint>();
 
         DragPoint drag = null;
         private float dragvalue;
         private Point draglocation;
+        private ClickPoint clickpoint;
 
         public TimelineForm()
         {
@@ -53,10 +65,9 @@ namespace PCRTimeline
 
         private void TimelineForm_Paint(object sender, PaintEventArgs e)
         {
-            const int IconSize = 48;
-            const int clickband = 6;
             float limittime = 90f;
 
+            dragablepoint.Clear();
             clickablepoint.Clear();
 
             int maxvalue = 100 * secondsize - (this.Width - IconSize);
@@ -74,49 +85,25 @@ namespace PCRTimeline
 
             foreach (var battler in battlerlist)
             {
-                Image image = battler.avatar.image;
-
                 float time = 0f;
                 foreach (var item in battler.timeline)
                 {
                     int x = (int)(time * secondsize + IconSize) - this.hScrollBar1.Value;
                     int width = (int)(item.acttime * secondsize);
+                    if (0 < item.acttime && width < 8) width = 8;
 
-                    var brush = GetBrush(item);
-                    if (0 < width)
-                    {
-                        g.FillRectangle(brush, x, y + 4, width, image.Height - 16);
-                        g.DrawRectangle(Pens.DarkGray, x, y + 4, width, image.Height - 16);
-                        if (item.darty)
-                        {
-                            g.DrawRectangle(Pens.DarkGray, x - 1, y + 4 - 1, width + 2, image.Height - 16 + 2);
-                        }
+                    Rectangle skillrect = new Rectangle(x, y + 4, width, IconSize - 16);
 
-                        if (item.IsSkill)
-                        {
-                            var clip = g.ClipBounds;
-                            g.SetClip(new Rectangle(x, y + 4, width, image.Height - 16));
-                            g.DrawString(item.name, this.Font, Brushes.Black, x + 1, y + 4 + 1);
-                            g.SetClip(clip);
-                        }
-                    }
+                    DrawSkill(g, battler, item, skillrect);
 
-                    int intervalwidth = (int)(item.interval * secondsize);
-                    if (0 < width)
-                    {
-                        clickablepoint.Add(new DragPoint(
-                            new Rectangle(x - clickband / 2 + width, y + 4, clickband, image.Height - 16), TimelineType.ActStart, item
-                            ));
-                    }
-                    clickablepoint.Add(new DragPoint(
-                        new Rectangle(x - clickband / 2 + width + intervalwidth, y + 4, clickband, image.Height - 16), TimelineType.ActEnd, item)
-                        );
+                    AddDragPoint(item, skillrect);
+                    AddClickPoint(battler, item, skillrect);
 
                     time += item.acttime + item.interval;
 
                     if (limittime < time) break;
+                    if (item.Type == SkillType.Dead) break;
                 }
-
 
                 time = 0f;
                 var shiftHeight = new int[10];
@@ -127,7 +114,7 @@ namespace PCRTimeline
                     {
                         int px = (int)(x + item.effect.delay * secondsize);
                         int py = y + 16 + item.skillNo * 6 + shiftHeight[item.skillNo] * 3;
-                        var rect = new Rectangle(px, py, (int)(item.effect.duration * secondsize), image.Height - 32);
+                        var rect = new Rectangle(px, py, (int)(item.effect.duration * secondsize), IconSize - 32);
                         g.FillRectangle(Brushes.LightYellow, rect);
                         g.DrawRectangle(Pens.DarkGray, rect);
 
@@ -135,16 +122,75 @@ namespace PCRTimeline
                     }
                     time += item.acttime + item.interval;
                     if (limittime < time) break;
+                    if (item.Type == SkillType.Dead) break;
                 }
 
                 //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
+
+                Image image = battler.avatar.image;
                 g.DrawImage(image, 0, y, image.Width, image.Height);
 
-                y += image.Height;
+                y += IconSize;
             }
 
             hScrollBar1.Maximum = 95 * secondsize;
             hScrollBar1.LargeChange = this.Width;
+        }
+
+        private void AddClickPoint(Battler battler, CustomSkill item, Rectangle skillrect)
+        {
+            if (0 < skillrect.Width)
+            {
+                clickablepoint.Add(new ClickPoint()
+                {
+                    battler = battler,
+                    rect = skillrect,
+                    skill = item
+                });
+            }
+        }
+
+        private void AddDragPoint(CustomSkill cskill, Rectangle skillrect)
+        {
+            if (0 < cskill.acttime)
+            {
+                dragablepoint.Add(new DragPoint(
+                    new Rectangle(skillrect.Right - clickband / 2, skillrect.Y, clickband, skillrect.Height), TimelineType.ActStart, cskill
+                    ));
+            }
+            if (0 < cskill.interval)
+            {
+                int intervalwidth = (int)(cskill.interval * secondsize);
+                dragablepoint.Add(new DragPoint(
+                    new Rectangle(skillrect.Right + intervalwidth - clickband / 2, skillrect.Y, clickband, skillrect.Height), TimelineType.ActEnd, cskill)
+                    );
+            }
+        }
+
+        private void DrawSkill(Graphics g, Battler battler, CustomSkill item, Rectangle skillrect)
+        {
+            Image image = battler.avatar.image;
+
+            var brush = GetBrush(item);
+            if (0 < skillrect.Width)
+            {
+                g.FillRectangle(brush, skillrect);
+                g.DrawRectangle(Pens.DarkGray, skillrect);
+                if (item.darty)
+                {
+                    var flute = skillrect;
+                    flute.Inflate(1, 1);
+                    g.DrawRectangle(Pens.DarkGray, flute);
+                }
+
+                if (item.IsSkill)
+                {
+                    var clip = g.ClipBounds;
+                    g.SetClip(skillrect);
+                    g.DrawString(item.name, this.Font, Brushes.Black, skillrect.X + 1, skillrect.Y + 1);
+                    g.SetClip(clip);
+                }
+            }
         }
 
         public void DrawTimeline(Graphics g, int IconSize, int secondsize, int offset, Size size)
@@ -178,6 +224,8 @@ namespace PCRTimeline
                     return Brushes.Red;
                 case SkillType.Bind:
                     return Brushes.DarkGray;
+                case SkillType.Dead:
+                    return Brushes.Red;
                 default:
                     return Brushes.White;
             }
@@ -217,7 +265,7 @@ namespace PCRTimeline
 
         private void ChangeCursor(MouseEventArgs e)
         {
-            foreach (var click in clickablepoint)
+            foreach (var click in dragablepoint)
             {
                 if (click.rect.Contains(e.X, e.Y))
                 {
@@ -232,7 +280,7 @@ namespace PCRTimeline
         {
             if (e.Button == MouseButtons.Left)
             {
-                drag = clickablepoint.Find(n => n.rect.Contains(e.Location));
+                drag = dragablepoint.Find(n => n.rect.Contains(e.Location));
                 if (drag != null)
                 {
                     draglocation = e.Location;
@@ -272,8 +320,16 @@ namespace PCRTimeline
             {
                 System.Drawing.Point p = System.Windows.Forms.Cursor.Position;
 
-                //指定した画面上の座標位置にコンテキストメニューを表示する
-                this.contextMenuStrip1.Show(p);
+                clickpoint = clickablepoint.Find(n => n.rect.Contains(e.Location));
+
+                if (clickpoint != null)
+                {
+                    resetToolStripMenuItem.Enabled = clickpoint.skill.basic && clickpoint.skill.darty;
+                    deleteDataToolStripMenuItem.Enabled  = !clickpoint.skill.basic;
+
+                    //指定した画面上の座標位置にコンテキストメニューを表示する
+                    this.contextMenuStrip1.Show(p);
+                }
             }
 
         }
@@ -281,6 +337,82 @@ namespace PCRTimeline
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             Invalidate();
+        }
+
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (clickpoint != null)
+            {
+                clickpoint.skill.Reset();
+                if (clickpoint.skill.Type == SkillType.UnionBurst)
+                {
+                    clickpoint.skill.CreateModify();
+                }
+            }
+            this.Invalidate();
+        }
+
+        private void AddCustomerSkill(ClickPoint cb, CustomSkill skill)
+        {
+            if (cb != null)
+            {
+                var addindex = cb.battler.timeline.FindIndex(n => n == cb.skill);
+                if (0 <= addindex)
+                {
+                    cb.battler.timeline.Insert(addindex + 1, skill);
+                }
+
+            }
+        }
+
+        private void unionburstToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var ub = clickpoint.battler.avatar.skill.Find(n => n.type == SkillType.UnionBurst);
+            var customskill = new CustomSkill(ub);
+            customskill.CreateModify();
+            AddCustomerSkill(clickpoint, customskill);
+            this.Invalidate();
+        }
+
+        private void bindToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bind = new CustomSkill(null);
+            bind.modify = new Skill();
+            bind.modify.acttime = Math.Max(clickpoint.skill.interval, 1.0f);
+            bind.modify.type = SkillType.Bind;
+
+            clickpoint.skill.CreateModify();
+            clickpoint.skill.modify.interval = 0;
+
+            AddCustomerSkill(clickpoint, bind);
+            this.Invalidate();
+        }
+
+        private void deadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var bind = new CustomSkill(null);
+            bind.modify = new Skill();
+            bind.modify.acttime = Math.Max(clickpoint.skill.interval, 3.0f);
+            bind.modify.type = SkillType.Dead;
+
+            clickpoint.skill.CreateModify();
+            clickpoint.skill.modify.interval = 0;
+
+            AddCustomerSkill(clickpoint, bind);
+            this.Invalidate();
+        }
+
+        private void deleteDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (clickpoint != null)
+            {
+                var addindex = clickpoint.battler.timeline.FindIndex(n => n == clickpoint.skill);
+                if (0 <= addindex)
+                {
+                    clickpoint.battler.timeline.RemoveAt(addindex);
+                }
+                this.Invalidate();
+            }
         }
     }
 }

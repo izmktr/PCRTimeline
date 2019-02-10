@@ -22,8 +22,8 @@ namespace PCRTimeline
         public float AllTime { get { return acttime + interval; } }
 
         public bool darty => modify != null;
-        public SkillType Type => original.type;
-        public bool basic => original == null || original.type == SkillType.UnionBurst;
+        public SkillType Type => original != null ? original.type : modify.type;
+        public bool basic => original != null;
 
         public int skillNo
         {
@@ -73,7 +73,7 @@ namespace PCRTimeline
             original = skill;
         }
 
-        private void Reset()
+        public void Reset()
         {
             modify = null;
         }

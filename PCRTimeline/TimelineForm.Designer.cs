@@ -31,9 +31,12 @@
             this.components = new System.ComponentModel.Container();
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.リセットToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.データを追加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.データを削除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unionburstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bindToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,29 +54,56 @@
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.リセットToolStripMenuItem,
-            this.データを追加ToolStripMenuItem,
-            this.データを削除ToolStripMenuItem});
+            this.resetToolStripMenuItem,
+            this.addDataToolStripMenuItem,
+            this.deleteDataToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(134, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
             // 
-            // リセットToolStripMenuItem
+            // resetToolStripMenuItem
             // 
-            this.リセットToolStripMenuItem.Name = "リセットToolStripMenuItem";
-            this.リセットToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.リセットToolStripMenuItem.Text = "リセット";
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetToolStripMenuItem.Text = "リセット";
+            this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
-            // データを追加ToolStripMenuItem
+            // addDataToolStripMenuItem
             // 
-            this.データを追加ToolStripMenuItem.Name = "データを追加ToolStripMenuItem";
-            this.データを追加ToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.データを追加ToolStripMenuItem.Text = "データを追加";
+            this.addDataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.unionburstToolStripMenuItem,
+            this.bindToolStripMenuItem,
+            this.deadToolStripMenuItem});
+            this.addDataToolStripMenuItem.Name = "addDataToolStripMenuItem";
+            this.addDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addDataToolStripMenuItem.Text = "追加";
             // 
-            // データを削除ToolStripMenuItem
+            // unionburstToolStripMenuItem
             // 
-            this.データを削除ToolStripMenuItem.Name = "データを削除ToolStripMenuItem";
-            this.データを削除ToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.データを削除ToolStripMenuItem.Text = "データを削除";
+            this.unionburstToolStripMenuItem.Name = "unionburstToolStripMenuItem";
+            this.unionburstToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.unionburstToolStripMenuItem.Text = "ユニオンバースト";
+            this.unionburstToolStripMenuItem.Click += new System.EventHandler(this.unionburstToolStripMenuItem_Click);
+            // 
+            // bindToolStripMenuItem
+            // 
+            this.bindToolStripMenuItem.Name = "bindToolStripMenuItem";
+            this.bindToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bindToolStripMenuItem.Text = "行動不能";
+            this.bindToolStripMenuItem.Click += new System.EventHandler(this.bindToolStripMenuItem_Click);
+            // 
+            // deadToolStripMenuItem
+            // 
+            this.deadToolStripMenuItem.Name = "deadToolStripMenuItem";
+            this.deadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deadToolStripMenuItem.Text = "戦闘不能";
+            this.deadToolStripMenuItem.Click += new System.EventHandler(this.deadToolStripMenuItem_Click);
+            // 
+            // deleteDataToolStripMenuItem
+            // 
+            this.deleteDataToolStripMenuItem.Name = "deleteDataToolStripMenuItem";
+            this.deleteDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteDataToolStripMenuItem.Text = "削除";
+            this.deleteDataToolStripMenuItem.Click += new System.EventHandler(this.deleteDataToolStripMenuItem_Click);
             // 
             // TimelineForm
             // 
@@ -95,8 +125,11 @@
 
         private System.Windows.Forms.HScrollBar hScrollBar1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem リセットToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem データを追加ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem データを削除ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addDataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteDataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unionburstToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bindToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deadToolStripMenuItem;
     }
 }

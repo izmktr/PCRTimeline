@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PCRTimeline
 {
-    class Battler
+    public class Battler
     {
         public Avatar avatar = null;
         public List<CustomSkill> timeline = new List<CustomSkill>();
