@@ -16,6 +16,7 @@ namespace PCRTimeline
         const int timelineheight = 16;
         const int IconSize = 48;
         const int clickband = 6;
+        const float limittime = 90f;
 
         int secondsize { get { return secondsizearray[scope]; } }
 
@@ -63,14 +64,33 @@ namespace PCRTimeline
             InitializeComponent();
         }
 
+        static IEnumerable<(CustomSkill skill, Rectangle rect)> SkillRectangle(List<CustomSkill> timeline, int y, int secondsize, int hoffset)
+        {
+            float time = 0f;
+            foreach (var item in timeline)
+            {
+                int x = (int)(time * secondsize + IconSize) - hoffset;
+                int width = (int)(item.acttime * secondsize);
+                if (0 < item.acttime && width < 8) width = 8;
+
+                Rectangle skillrect = new Rectangle(x, y + 4, width, IconSize - 16);
+
+                yield return (item, skillrect);
+
+                time += item.acttime + item.interval;
+
+                if (limittime < time) break;
+                if (item.Type == SkillType.Dead) break;
+            }
+        }
+
         private void TimelineForm_Paint(object sender, PaintEventArgs e)
         {
-            float limittime = 90f;
 
             dragablepoint.Clear();
             clickablepoint.Clear();
 
-            int maxvalue = 100 * secondsize - (this.Width - IconSize);
+            int maxvalue = 95 * secondsize - (this.Width - IconSize);
             if (maxvalue < hScrollBar1.Value)
             {
                 hScrollBar1.Value = Math.Max(0, maxvalue);
@@ -80,29 +100,19 @@ namespace PCRTimeline
             Graphics g = e.Graphics;
 
             g.FillRectangle(Brushes.White, new Rectangle(0, 0, Width, Height));
+
             DrawTimeline(g, IconSize, secondsize, hScrollBar1.Value, this.Size);
             y += 16;
 
             foreach (var battler in battlerlist)
             {
                 float time = 0f;
-                foreach (var item in battler.timeline)
+                foreach (var (skill, rect) in SkillRectangle(battler.timeline, y, secondsize, hScrollBar1.Value))
                 {
-                    int x = (int)(time * secondsize + IconSize) - this.hScrollBar1.Value;
-                    int width = (int)(item.acttime * secondsize);
-                    if (0 < item.acttime && width < 8) width = 8;
+                    DrawSkill(g, battler, skill, rect);
 
-                    Rectangle skillrect = new Rectangle(x, y + 4, width, IconSize - 16);
-
-                    DrawSkill(g, battler, item, skillrect);
-
-                    AddDragPoint(item, skillrect);
-                    AddClickPoint(battler, item, skillrect);
-
-                    time += item.acttime + item.interval;
-
-                    if (limittime < time) break;
-                    if (item.Type == SkillType.Dead) break;
+                    AddDragPoint(skill, rect);
+                    AddClickPoint(battler, skill, rect);
                 }
 
                 time = 0f;
@@ -263,6 +273,59 @@ namespace PCRTimeline
             }
         }
 
+        internal Bitmap ExportImage()
+        {
+            Bitmap image = new Bitmap(IconSize + 95 * secondsize, IconSize * battlerlist.Count);
+
+            using (var g = Graphics.FromImage(image))
+            {
+                int y = 0;
+
+                g.FillRectangle(Brushes.White, new Rectangle(0, 0, image.Width, image.Height));
+
+                DrawTimeline(g, IconSize, secondsize, 0, image.Size);
+                y += 16;
+
+                foreach (var battler in battlerlist)
+                {
+                    float time = 0f;
+                    foreach (var (skill, rect) in SkillRectangle(battler.timeline, y, secondsize, hScrollBar1.Value))
+                    {
+                        DrawSkill(g, battler, skill, rect);
+                    }
+
+                    time = 0f;
+                    var shiftHeight = new int[10];
+                    foreach (var item in battler.timeline)
+                    {
+                        int x = (int)(time * secondsize + IconSize);
+                        if (item.effect != null && 0 < item.effect.duration)
+                        {
+                            int px = (int)(x + item.effect.delay * secondsize);
+                            int py = y + 16 + item.skillNo * 6 + shiftHeight[item.skillNo] * 3;
+                            var rect = new Rectangle(px, py, (int)(item.effect.duration * secondsize), IconSize - 32);
+                            g.FillRectangle(Brushes.LightYellow, rect);
+                            g.DrawRectangle(Pens.DarkGray, rect);
+
+                            shiftHeight[item.skillNo] = (shiftHeight[item.skillNo] + 1) % 2;
+                        }
+                        time += item.acttime + item.interval;
+                        if (limittime < time) break;
+                        if (item.Type == SkillType.Dead) break;
+                    }
+
+                    //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
+
+                    Image avatarimage = battler.avatar.image;
+                    g.DrawImage(avatarimage, 0, y, avatarimage.Width, avatarimage.Height);
+
+                    y += IconSize;
+                }
+            }
+
+            return image;
+        }
+
         private void ChangeCursor(MouseEventArgs e)
         {
             foreach (var click in dragablepoint)
@@ -325,7 +388,7 @@ namespace PCRTimeline
                 if (clickpoint != null)
                 {
                     resetToolStripMenuItem.Enabled = clickpoint.skill.basic && clickpoint.skill.darty;
-                    deleteDataToolStripMenuItem.Enabled  = !clickpoint.skill.basic;
+                    deleteDataToolStripMenuItem.Enabled  = !clickpoint.skill.basic || clickpoint.skill.Type == SkillType.UnionBurst;
 
                     //指定した画面上の座標位置にコンテキストメニューを表示する
                     this.contextMenuStrip1.Show(p);
@@ -378,11 +441,10 @@ namespace PCRTimeline
         {
             var bind = new CustomSkill(null);
             bind.modify = new Skill();
-            bind.modify.acttime = Math.Max(clickpoint.skill.interval, 1.0f);
+            bind.modify.acttime = 1.0f;
             bind.modify.type = SkillType.Bind;
 
             clickpoint.skill.CreateModify();
-            clickpoint.skill.modify.interval = 0;
 
             AddCustomerSkill(clickpoint, bind);
             this.Invalidate();

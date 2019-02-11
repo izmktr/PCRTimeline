@@ -79,7 +79,7 @@ namespace PCRTimeline
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            XmlWrite.SampleWrite();
+//            XmlWrite.SampleWrite();
 
             AvatarLoad();
 
@@ -275,17 +275,19 @@ namespace PCRTimeline
 
         private void exportImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string filename = "export.png";
-            int secondsize = 8;
-
-            Bitmap bitmap = new Bitmap(IconSize + 95 * secondsize, IconSize * battlerlist.Count);
-            using (var g = Graphics.FromImage(bitmap))
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
-                g.FillRectangle(Brushes.White, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
-                timeline.DrawTimeline(g, IconSize, secondsize, 0, bitmap.Size);
-            }
+                saveFileDialog.Filter = "png files (*.png)|*.png";
+                saveFileDialog.FilterIndex = 1;
+                saveFileDialog.RestoreDirectory = true;
 
-            bitmap.Save(filename, System.Drawing.Imaging.ImageFormat.Png);
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap bitmap = timeline.ExportImage();
+
+                    bitmap.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                }
+            }
 
         }
 
