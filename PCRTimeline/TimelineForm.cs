@@ -275,7 +275,7 @@ namespace PCRTimeline
 
         internal Bitmap ExportImage()
         {
-            Bitmap image = new Bitmap(IconSize + 95 * secondsize, IconSize * battlerlist.Count);
+            Bitmap image = new Bitmap(IconSize + 95 * secondsize, IconSize * battlerlist.Count + 16);
 
             using (var g = Graphics.FromImage(image))
             {
