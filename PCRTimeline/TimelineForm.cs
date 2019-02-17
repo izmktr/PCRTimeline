@@ -16,7 +16,8 @@ namespace PCRTimeline
         const int timelineheight = 16;
         const int IconSize = 48;
         const int clickband = 6;
-        const float limittime = 90f;
+        const int limittime = 90;
+        const int righttime = limittime + 5;
 
         int secondsize { get { return secondsizearray[scope]; } }
 
@@ -90,7 +91,7 @@ namespace PCRTimeline
             dragablepoint.Clear();
             clickablepoint.Clear();
 
-            int maxvalue = 95 * secondsize - (this.Width - IconSize);
+            int maxvalue = righttime * secondsize - (this.Width - IconSize);
             if (maxvalue < hScrollBar1.Value)
             {
                 hScrollBar1.Value = Math.Max(0, maxvalue);
@@ -107,12 +108,15 @@ namespace PCRTimeline
             foreach (var battler in battlerlist)
             {
                 float time = 0f;
+                CustomSkill before = null;
                 foreach (var (skill, rect) in SkillRectangle(battler.timeline, y, secondsize, hScrollBar1.Value))
                 {
                     DrawSkill(g, battler, skill, rect);
 
-                    AddDragPoint(skill, rect);
+                    AddDragPoint(skill, before, rect);
                     AddClickPoint(battler, skill, rect);
+
+                    before = skill;
                 }
 
                 time = 0f;
@@ -143,7 +147,7 @@ namespace PCRTimeline
                 y += IconSize;
             }
 
-            hScrollBar1.Maximum = 95 * secondsize;
+            hScrollBar1.Maximum = righttime * secondsize;
             hScrollBar1.LargeChange = this.Width;
         }
 
@@ -160,19 +164,17 @@ namespace PCRTimeline
             }
         }
 
-        private void AddDragPoint(CustomSkill cskill, Rectangle skillrect)
+        private void AddDragPoint(CustomSkill current, CustomSkill before, Rectangle skillrect)
         {
-            if (0 < cskill.acttime)
+            if (0 < current.acttime)
             {
                 dragablepoint.Add(new DragPoint(
-                    new Rectangle(skillrect.Right - clickband / 2, skillrect.Y, clickband, skillrect.Height), TimelineType.ActStart, cskill
+                    new Rectangle(skillrect.Right - clickband / 2, skillrect.Y, clickband, skillrect.Height), TimelineType.ActStart, current
                     ));
-            }
-            if (0 < cskill.interval)
-            {
-                int intervalwidth = (int)(cskill.interval * secondsize);
+
+                int actwidth = (int)(current.acttime * secondsize);
                 dragablepoint.Add(new DragPoint(
-                    new Rectangle(skillrect.Right + intervalwidth - clickband / 2, skillrect.Y, clickband, skillrect.Height), TimelineType.ActEnd, cskill)
+                    new Rectangle(skillrect.X, skillrect.Y, actwidth - clickband / 2, skillrect.Height), TimelineType.ActEnd, before)
                     );
             }
         }
@@ -275,7 +277,7 @@ namespace PCRTimeline
 
         internal Bitmap ExportImage()
         {
-            Bitmap image = new Bitmap(IconSize + 95 * secondsize, IconSize * battlerlist.Count + 16);
+            Bitmap image = new Bitmap(IconSize + righttime * secondsize, IconSize * battlerlist.Count + 16);
 
             using (var g = Graphics.FromImage(image))
             {
@@ -332,8 +334,11 @@ namespace PCRTimeline
             {
                 if (click.rect.Contains(e.X, e.Y))
                 {
-                    this.Cursor = Cursors.SizeWE;
-                    return;
+                    if (click.dragpoint == TimelineType.ActStart)
+                    {
+                        this.Cursor = Cursors.SizeWE;
+                        return;
+                    }
                 }
             }
             this.Cursor = Cursors.Default;
