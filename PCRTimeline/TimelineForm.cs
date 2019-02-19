@@ -70,7 +70,7 @@ namespace PCRTimeline
             float time = 0f;
             foreach (var item in timeline)
             {
-                int x = (int)(time * secondsize + IconSize) - hoffset;
+                int x = (int)((time + item.interval) * secondsize + IconSize) - hoffset;
                 int width = (int)(item.acttime * secondsize);
                 if (0 < item.acttime && width < 8) width = 8;
 
@@ -108,15 +108,12 @@ namespace PCRTimeline
             foreach (var battler in battlerlist)
             {
                 float time = 0f;
-                CustomSkill before = null;
                 foreach (var (skill, rect) in SkillRectangle(battler.timeline, y, secondsize, hScrollBar1.Value))
                 {
                     DrawSkill(g, battler, skill, rect);
 
-                    AddDragPoint(skill, before, rect);
+                    AddDragPoint(skill, rect);
                     AddClickPoint(battler, skill, rect);
-
-                    before = skill;
                 }
 
                 time = 0f;
@@ -164,7 +161,7 @@ namespace PCRTimeline
             }
         }
 
-        private void AddDragPoint(CustomSkill current, CustomSkill before, Rectangle skillrect)
+        private void AddDragPoint(CustomSkill current, Rectangle skillrect)
         {
             if (0 < current.acttime)
             {
@@ -174,7 +171,7 @@ namespace PCRTimeline
 
                 int actwidth = (int)(current.acttime * secondsize);
                 dragablepoint.Add(new DragPoint(
-                    new Rectangle(skillrect.X, skillrect.Y, actwidth - clickband / 2, skillrect.Height), TimelineType.ActEnd, before)
+                    new Rectangle(skillrect.X, skillrect.Y, actwidth - clickband / 2, skillrect.Height), TimelineType.ActEnd, current)
                     );
             }
         }
@@ -217,6 +214,30 @@ namespace PCRTimeline
                 {
                     g.DrawString(string.Format("{0}:{1}0", i <= 30 ? 1 : 0, (9 - i / 10) % 6), Font, Brushes.Black, x - 10, 0);
                 }
+            }
+        }
+
+        public void DrawBuffGraph(Graphics g, int secondsize, int offset, Rectangle rect)
+        {
+            if (battlerlist.Count == 0) return;
+            var buff = battlerlist[0].buff;
+
+            List<BuffValuePair> line;
+            if (!buff.TryGetValue(BuffEffectType.DefEnemy, out line)) return;
+
+            int maxvalue = 300;
+            var pen = Pens.Blue;
+            BuffValuePair before = new BuffValuePair(0, 0);
+            foreach (var item in line)
+            {
+                var left = new Point((int)(before.time * secondsize - offset) + rect.X,  - before.totalValue * rect.Height / maxvalue + rect.Bottom);
+                var rightLow = new Point((int)(item.time * secondsize - offset) + rect.X, before.totalValue * rect.Height / maxvalue + rect.Bottom);
+                var rightHigh= new Point((int)(item.time * secondsize - offset) + rect.X, item.totalValue * rect.Height / maxvalue + rect.Bottom);
+
+                g.DrawLine(pen, left, rightLow);
+                g.DrawLine(pen, rightLow, rightHigh);
+
+                before = item;
             }
         }
 
