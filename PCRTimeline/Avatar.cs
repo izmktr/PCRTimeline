@@ -142,6 +142,7 @@ namespace PCRTimeline
                 case 'o':
                     return skill.First(n => n.type == SkillType.Opening);
                 case 'a':
+                case '0':
                     return skill.First(n => n.type == SkillType.Attack);
             }
 

@@ -65,7 +65,7 @@ namespace PCRTimeline
             InitializeComponent();
         }
 
-        static IEnumerable<(CustomSkill skill, Rectangle rect)> SkillRectangle(List<CustomSkill> timeline, int y, int secondsize, int hoffset)
+        static IEnumerable<(CustomSkill skill, Rectangle rect)> SkillRectangle(IEnumerable<CustomSkill> timeline, int y, int secondsize, int hoffset)
         {
             float time = 0f;
             foreach (var item in timeline)
