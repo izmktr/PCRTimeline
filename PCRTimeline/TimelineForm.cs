@@ -120,7 +120,7 @@ namespace PCRTimeline
                 var shiftHeight = new int[10];
                 foreach (var item in battler.timeline)
                 {
-                    int x = (int)(time * secondsize + IconSize) - this.hScrollBar1.Value;
+                    int x = (int)((time + item.interval) * secondsize + IconSize) - this.hScrollBar1.Value;
                     if (item.effect != null && 0 < item.effect.duration)
                     {
                         int px = (int)(x + item.effect.delay * secondsize);
@@ -321,7 +321,7 @@ namespace PCRTimeline
                     var shiftHeight = new int[10];
                     foreach (var item in battler.timeline)
                     {
-                        int x = (int)(time * secondsize + IconSize);
+                        int x = (int)((time + item.interval) * secondsize + IconSize);
                         if (item.effect != null && 0 < item.effect.duration)
                         {
                             int px = (int)(x + item.effect.delay * secondsize);

@@ -32,6 +32,7 @@ namespace PCRTimeline
             float time = 0.0f;
             foreach (var skill in timeline)
             {
+                if (skill.effect == null) continue;
                 if (0 < skill.effect.duration && skill.effect.type == BuffEffectType.None)
                 {
                     float starttime = time + skill.interval + skill.effect.delay;
@@ -84,7 +85,7 @@ namespace PCRTimeline
                 if (skill == null) break;
                 if (120f < time) break;
 
-                if (skill.type != SkillType.Opening) continue;
+                if (skill.type != SkillType.Opening)
                 {
                     if (before != null && before.type == SkillType.Opening)
                     {
