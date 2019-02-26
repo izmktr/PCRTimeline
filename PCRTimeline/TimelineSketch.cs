@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCRTimeline.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,19 +9,19 @@ namespace PCRTimeline
 {
     public class SkillSketch
     {
-        public int index;
-        public Skill skill;
+        public int index = 0;
+        public SkillType type = SkillType.Default;
+        public float adjustment = default(float);
 
         public SkillSketch(int index, CustomSkill skill)
         {
             this.index = index;
-            this.skill = skill.modify;
+            this.type = skill.Type;
+            this.adjustment = skill.adjustment;
         }
 
         public SkillSketch()
         {
-            index = 0;
-            skill = null;
         }
     }
 
@@ -97,14 +98,15 @@ namespace PCRTimeline
                 foreach (var ssketch in item.skillsketch)
                 {
                     var battlerskill = battler.timeline[ssketch.index];
-                    if (ssketch.skill.type == battlerskill.Type)
+                    if (ssketch.type == battlerskill.Type)
                     {
-                        battlerskill.modify = ssketch.skill;
+                        battlerskill.adjustment = ssketch.adjustment;
                     }
                     else
                     {
-                        var insertskill = new CustomSkill(null);
-                        insertskill.modify = ssketch.skill;
+                        var skill = avatar.GetSkill(ssketch.type);
+                        var insertskill = new CustomSkill(skill, SkillType.Default);
+                        insertskill.adjustment = ssketch.adjustment;
                         battler.timeline.Insert(ssketch.index, insertskill);
                     }
                 }

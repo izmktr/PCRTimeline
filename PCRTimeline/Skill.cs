@@ -3,26 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PCRTimeline.Data;
 
 namespace PCRTimeline
 {
     public class CustomSkill
     {
-        Skill original;
-        public Skill modify;
+        Skill original = null;
+        ActTime act = null;
+        public float adjustment = default(float);
 
-        public void CreateModify()
-        {
-            if (modify == null) modify = original.Copy();
-        }
+        public float interval => act.interval - adjustment;
 
-        public float acttime => modify != null ? modify.acttime : original.acttime;
-        public float interval => modify != null ? modify.interval : original.interval;
-
-        public float AllTime { get { return acttime + interval; } }
-
-        public bool darty => modify != null;
-        public SkillType Type => original != null ? original.type : modify.type;
+        public bool darty => adjustment != default(float);
+        public SkillType Type => original.type;
         public bool basic => original != null;
 
         public int skillNo
@@ -66,16 +60,17 @@ namespace PCRTimeline
         }
         public string name => original.name;
 
-        public Effect effect => modify != null ? modify.effect : original.effect;
+        public Effect effect => original.effect;
 
-        public CustomSkill(Skill skill)
+        public CustomSkill(Skill skill, SkillType nexttype = SkillType.Default)
         {
             original = skill;
+            act = skill.GetActTime(nexttype);
         }
 
         public void Reset()
         {
-            modify = null;
+            adjustment = default(float);
         }
     }
 

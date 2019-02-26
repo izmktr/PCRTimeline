@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCRTimeline.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +16,6 @@ namespace PCRTimeline
         int[] secondsizearray = { 4, 8, 16, 32, 64 };
         const int timelineheight = 16;
         const int IconSize = 48;
-        const int clickband = 6;
         const int limittime = 90;
         const int righttime = limittime + 5;
 
@@ -71,14 +71,14 @@ namespace PCRTimeline
             foreach (var item in timeline)
             {
                 int x = (int)((time + item.interval) * secondsize + IconSize) - hoffset;
-                int width = (int)(item.acttime * secondsize);
-                if (0 < item.acttime && width < 8) width = 8;
+                int width = (int)(item.interval * secondsize);
+                if (0 < item.interval && width < 8) width = 8;
 
                 Rectangle skillrect = new Rectangle(x, y + 4, width, IconSize - 16);
 
                 yield return (item, skillrect);
 
-                time += item.acttime + item.interval;
+                time += item.interval;
 
                 if (limittime < time) break;
                 if (item.Type == SkillType.Dead) break;
@@ -131,7 +131,7 @@ namespace PCRTimeline
 
                         shiftHeight[item.skillNo] = (shiftHeight[item.skillNo] + 1) % 2;
                     }
-                    time += item.acttime + item.interval;
+                    time += item.interval;
                     if (limittime < time) break;
                     if (item.Type == SkillType.Dead) break;
                 }
@@ -163,15 +163,15 @@ namespace PCRTimeline
 
         private void AddDragPoint(CustomSkill current, Rectangle skillrect)
         {
-            if (0 < current.acttime)
+            if (0 < current.interval)
             {
-                dragablepoint.Add(new DragPoint(
-                    new Rectangle(skillrect.Right - clickband / 2, skillrect.Y, clickband, skillrect.Height), TimelineType.ActStart, current
-                    ));
+//                 dragablepoint.Add(new DragPoint(
+//                     new Rectangle(skillrect.Right - clickband / 2, skillrect.Y, clickband, skillrect.Height), TimelineType.ActStart, current
+//                     ));
 
-                int actwidth = (int)(current.acttime * secondsize);
+                int actwidth = (int)(current.interval * secondsize);
                 dragablepoint.Add(new DragPoint(
-                    new Rectangle(skillrect.X, skillrect.Y, actwidth - clickband / 2, skillrect.Height), TimelineType.ActEnd, current)
+                    new Rectangle(skillrect.X, skillrect.Y, actwidth, skillrect.Height), TimelineType.ActEnd, current)
                     );
             }
         }
@@ -256,9 +256,9 @@ namespace PCRTimeline
                 case SkillType.UnionBurst:
                     return Brushes.Red;
                 case SkillType.Bind:
-                    return Brushes.DarkGray;
+                    return Brushes.LightYellow;
                 case SkillType.Dead:
-                    return Brushes.Red;
+                    return Brushes.DarkGray;
                 default:
                     return Brushes.White;
             }
@@ -272,15 +272,14 @@ namespace PCRTimeline
             {
                 float value = dragvalue + (e.Location.X - draglocation.X) / (float) secondsize;
                 if (value < 0.25f) value = 0.25f;
-                drag.skill.CreateModify();
 
                 switch (drag.dragpoint)
                 {
                     case TimelineType.ActStart:
-                        drag.skill.modify.acttime = value;
+                        drag.skill.adjustment = value;
                         break;
                     case TimelineType.ActEnd:
-                        drag.skill.modify.interval = value;
+                        drag.skill.adjustment = value;
                         break;
                     case TimelineType.EffectStart:
                         drag.skill.effect.delay = value;
@@ -332,7 +331,7 @@ namespace PCRTimeline
 
                             shiftHeight[item.skillNo] = (shiftHeight[item.skillNo] + 1) % 2;
                         }
-                        time += item.acttime + item.interval;
+                        time += item.interval;
                         if (limittime < time) break;
                         if (item.Type == SkillType.Dead) break;
                     }
@@ -376,7 +375,7 @@ namespace PCRTimeline
                     switch (drag.dragpoint)
                     {
                         case TimelineType.ActStart:
-                            dragvalue = drag.skill.acttime;
+//                            dragvalue = drag.skill.acttime;
                             break;
                         case TimelineType.ActEnd:
                             dragvalue = drag.skill.interval;
@@ -433,10 +432,6 @@ namespace PCRTimeline
             if (clickpoint != null)
             {
                 clickpoint.skill.Reset();
-                if (clickpoint.skill.Type == SkillType.UnionBurst)
-                {
-                    clickpoint.skill.CreateModify();
-                }
             }
             this.Invalidate();
         }
@@ -456,37 +451,25 @@ namespace PCRTimeline
 
         private void unionburstToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var ub = clickpoint.battler.avatar.skill.Find(n => n.type == SkillType.UnionBurst);
+            var ub = clickpoint.battler.avatar.GetSkill(Data.SkillType.UnionBurst);
             var customskill = new CustomSkill(ub);
-            customskill.CreateModify();
             AddCustomerSkill(clickpoint, customskill);
             this.Invalidate();
         }
 
         private void bindToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var bind = new CustomSkill(null);
-            bind.modify = new Skill();
-            bind.modify.acttime = 1.0f;
-            bind.modify.type = SkillType.Bind;
-
-            clickpoint.skill.CreateModify();
-
-            AddCustomerSkill(clickpoint, bind);
+            var bind = clickpoint.battler.avatar.GetSkill(Data.SkillType.Bind);
+            var customskill = new CustomSkill(bind);
+            AddCustomerSkill(clickpoint, customskill);
             this.Invalidate();
         }
 
         private void deadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var bind = new CustomSkill(null);
-            bind.modify = new Skill();
-            bind.modify.acttime = Math.Max(clickpoint.skill.interval, 3.0f);
-            bind.modify.type = SkillType.Dead;
-
-            clickpoint.skill.CreateModify();
-            clickpoint.skill.modify.interval = 0;
-
-            AddCustomerSkill(clickpoint, bind);
+            var bind = clickpoint.battler.avatar.GetSkill(Data.SkillType.Dead);
+            var customskill = new CustomSkill(bind);
+            AddCustomerSkill(clickpoint, customskill);
             this.Invalidate();
         }
 

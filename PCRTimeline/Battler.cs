@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PCRTimeline.Data;
 
 namespace PCRTimeline
 {
@@ -80,27 +81,18 @@ namespace PCRTimeline
             float time = 0.0f;
 
             Skill before = null;
-            foreach(var skill in avatar.ActionOrder())
+            foreach (var skill in avatar.ActionOrder())
             {
                 if (skill == null) break;
                 if (120f < time) break;
 
-                if (skill.type != SkillType.Opening)
+                if (before != null)
                 {
-                    if (before != null && before.type == SkillType.Opening)
-                    {
-                        Skill opskill = skill.Copy();
-                        opskill.interval = before.acttime + before.interval;
-                        timeline.Add(new CustomSkill(opskill));
-                    }
-                    else
-                    {
-                        CustomSkill cskill = new CustomSkill(skill);
-                        timeline.Add(cskill);
-                    }
-
-                    time += skill.acttime + skill.interval;
+                    CustomSkill cskill = new CustomSkill(before, skill.type);
+                    timeline.Add(cskill);
                 }
+                var acttime = before.GetActTime(skill.type);
+                time += acttime.interval;
 
                 before = skill;
             }
