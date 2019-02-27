@@ -80,21 +80,21 @@ namespace PCRTimeline
 
             float time = 0.0f;
 
-            Skill before = null;
-            foreach (var skill in avatar.ActionOrder())
+            Skill skill = null;
+            foreach (var next in avatar.ActionOrder())
             {
-                if (skill == null) break;
+                if (next == null) break;
                 if (120f < time) break;
 
-                if (before != null)
+                if (skill != null)
                 {
-                    CustomSkill cskill = new CustomSkill(before, skill.type);
+                    CustomSkill cskill = new CustomSkill(skill, next.type);
                     timeline.Add(cskill);
+                    var acttime = skill.GetActTime(next.type);
+                    time += acttime.interval;
                 }
-                var acttime = before.GetActTime(skill.type);
-                time += acttime.interval;
 
-                before = skill;
+                skill = next;
             }
             CreateBuffline();
         }

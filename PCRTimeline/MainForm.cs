@@ -58,6 +58,7 @@ namespace PCRTimeline
                         avatar.image = CreateIcon(avatar);
                     }
 
+                    avatar.SkillDefault();
                     avatarlist.Add(avatar);
                 }
             }

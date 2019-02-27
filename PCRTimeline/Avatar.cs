@@ -64,8 +64,11 @@ namespace PCRTimeline
             {
                 Skill skill;
                 if (genraldic.TryGetValue(type, out skill)) { return skill; }
-                skill = new Skill();
-                skill.type = type;
+
+                skill = new Skill
+                {
+                    type = type
+                };
                 var acttime = new ActTime();
                 skill.acttimelist.Add(acttime);
                 switch (type)
@@ -159,59 +162,118 @@ namespace PCRTimeline
                 }
             }
 
-            public Skill GetSkill(SkillType type)
+            public List<Tuple<SkillType, SkillType>> SkillPair()
             {
-                switch (type)
+                HashSet<Tuple<SkillType, SkillType>> hash = new HashSet<Tuple<SkillType, SkillType>>();
+                int loopindex = 0;
+
+                bool endstep = false;
+
+                SkillType before = SkillType.Default;
+                for (int index = 0; index < actionOrder.Length; index++)
                 {
-                    case SkillType.Opening:
-                        break;
-                    case SkillType.Attack:
-                        break;
-                    case SkillType.Skill1:
-                        break;
-                    case SkillType.Skill2:
-                        break;
-                    case SkillType.Skill3:
-                        break;
-                    case SkillType.Skill4:
-                        break;
-                    case SkillType.Skill5:
-                        break;
-                    case SkillType.UnionBurst:
-                        break;
-                    case SkillType.Bind:
-                        break;
-                    case SkillType.Dead:
-                        break;
-                    default:
-                        break;
+                    var c = actionOrder[index];
+                    switch (c)
+                    {
+                        case '[':
+                            loopindex = index;
+                            break;
+                        case ']':
+                            index = loopindex;
+                            endstep = true;
+                            break;
+                        default:
+                            var skilltype = ConvertSkillType(c);
+                            if (skilltype == SkillType.Default)
+                            {
+                                index = actionOrder.Length;
+                            }
+                            else if (before != SkillType.Default)
+                            {
+                                hash.Add(new Tuple<SkillType, SkillType>(before, skilltype));
+                                if (endstep) index = actionOrder.Length;
+                            }
+                            before = skilltype;
+                            break;
+                    }
                 }
-                return null;
+
+                return hash.ToList();
             }
 
-            private Skill ConvertSkill(char c)
+            public void SkillDefault()
+            {
+                var list = SkillPair();
+
+                foreach (var item in list)
+                {
+                    var s = skill.FirstOrDefault(n => n.type == item.Item1);
+                    if (s == null)
+                    {
+                        s = new Skill() { type = item.Item1, name = item.Item1.ToString() };
+                        s.acttimelist.Add(new ActTime() { nexttype = item.Item2, interval = 2f });
+                    }
+                    else
+                    {
+                        if (s.acttimelist.All(n => n.nexttype != item.Item2))
+                        {
+                            s.acttimelist.Add(new ActTime() { nexttype = item.Item2, interval = 2f });
+                        }
+                    }
+                }
+
+            }
+
+            public Skill GetSkill(SkillType type)
+            {
+                return skill.FirstOrDefault(n => n.type == type);
+            }
+
+            SkillType ConvertSkillType(char c)
             {
                 switch (Char.ToLower(c))
                 {
                     case '1':
-                        return skill.First(n => n.type == SkillType.Skill1);
+                        return SkillType.Skill1;
                     case '2':
-                        return skill.First(n => n.type == SkillType.Skill2);
+                        return SkillType.Skill2;
                     case '3':
-                        return skill.First(n => n.type == SkillType.Skill3);
+                        return SkillType.Skill3;
                     case '4':
-                        return skill.First(n => n.type == SkillType.Skill4);
+                        return SkillType.Skill4;
                     case '5':
-                        return skill.First(n => n.type == SkillType.Skill5);
+                        return SkillType.Skill5;
                     case 'o':
-                        return skill.First(n => n.type == SkillType.Opening);
+                        return SkillType.Opening;
                     case 'a':
                     case '0':
-                        return skill.First(n => n.type == SkillType.Attack);
+                        return SkillType.Attack;
                 }
+                return SkillType.Default;
+            }
 
+            private Skill ConvertSkill(char c)
+            {
+                var type = ConvertSkillType(c);
+                if (type != SkillType.Default)
+                {
+                    return skill.First(n => n.type == type);
+                }
                 return null;
             }
+
+            public void Save(string filename)
+            {
+                System.Xml.Serialization.XmlSerializer serializer1 = 
+                    new System.Xml.Serialization.XmlSerializer(typeof(Avatar));
+
+                System.IO.StreamWriter sw = new System.IO.StreamWriter(
+                    filename, false, new System.Text.UTF8Encoding(false));
+
+                serializer1.Serialize(sw, this);
+                sw.Close();
+            }
         }
+
     }
 }
