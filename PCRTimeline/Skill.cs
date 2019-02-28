@@ -13,11 +13,11 @@ namespace PCRTimeline
         ActTime act = null;
         public float adjustment = default(float);
 
-        public float interval => act.interval - adjustment;
+        public float orginterval => act.interval;
+        public float interval => act.interval + adjustment;
 
         public bool darty => adjustment != default(float);
         public SkillType Type => original.type;
-        public bool basic => original != null;
 
         public int skillNo
         {

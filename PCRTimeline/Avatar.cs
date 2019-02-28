@@ -56,37 +56,40 @@ namespace PCRTimeline
             public ActTime GetActTime(SkillType nexttype) 
             {
                 var getindex = acttimelist.FindIndex(n => n.nexttype == nexttype);
-                return 0 <= getindex ? acttimelist[getindex] : acttimelist.Find(n => n.nexttype == SkillType.Default);
+                return 0 <= getindex ? acttimelist[getindex] : 
+                    acttimelist.Find(n => n.nexttype == SkillType.Default || n.nexttype == SkillType.Attack);
             }
 
-            static Dictionary<SkillType, Skill> genraldic = new Dictionary<SkillType, Skill>();
-            static Skill General(SkillType type)
+            static Dictionary<SkillType, Skill> genraldic = null;
+
+            public static Skill General(SkillType type)
             {
+                if (genraldic == null)
+                {
+                    genraldic = new Dictionary<SkillType, Skill>();
+
+                    AddDic(SkillType.Bind, 1.0f);
+                    AddDic(SkillType.Dead, 3.0f);
+                }
                 Skill skill;
                 if (genraldic.TryGetValue(type, out skill)) { return skill; }
-
-                skill = new Skill
-                {
-                    type = type
-                };
-                var acttime = new ActTime();
-                skill.acttimelist.Add(acttime);
-                switch (type)
-                {
-                    case SkillType.Bind:
-                        acttime.interval = 1.0f;
-                        break;
-                    case SkillType.Dead:
-                        acttime.interval = 3.0f;
-                        break;
-                }
-                genraldic.Add(type, skill);
-
-                return skill;
+                return null;
             }
+
+            private static void AddDic(SkillType type, float interval)
+            {
+                var skill = new Skill
+                {
+                    type = type,
+                    name = type.ToString(),
+                };
+                var acttime = new ActTime() { interval = interval };
+                skill.acttimelist.Add(acttime);
+                genraldic.Add(type, skill);
+           }
         }
 
-        public enum SkillType
+    public enum SkillType
         {
             Default,
             Opening,
@@ -119,12 +122,11 @@ namespace PCRTimeline
             public string name;
             public string aliasName;
             public int position;
+            public string actionOrder;
 
             public string icon;
 
             public List<Skill> skill = new List<Skill>();
-
-            public string actionOrder;
 
             [System.Xml.Serialization.XmlIgnore]
             public Image image;
@@ -188,7 +190,7 @@ namespace PCRTimeline
                             {
                                 index = actionOrder.Length;
                             }
-                            else if (before != SkillType.Default)
+                            else if (before != SkillType.Default && before != SkillType.Opening)
                             {
                                 hash.Add(new Tuple<SkillType, SkillType>(before, skilltype));
                                 if (endstep) index = actionOrder.Length;
@@ -197,6 +199,9 @@ namespace PCRTimeline
                             break;
                     }
                 }
+
+                hash.Add(new Tuple<SkillType, SkillType>(SkillType.Opening, SkillType.Default));
+                hash.Add(new Tuple<SkillType, SkillType>(SkillType.UnionBurst, SkillType.Default));
 
                 return hash.ToList();
             }
@@ -222,11 +227,16 @@ namespace PCRTimeline
                     }
                 }
 
+                foreach (var item in skill)
+                {
+                    item.acttimelist.Sort((a, b) => a.nexttype - b.nexttype);
+                }
+                skill.Sort((a, b) => a.type - b.type);
             }
 
             public Skill GetSkill(SkillType type)
             {
-                return skill.FirstOrDefault(n => n.type == type);
+                return Skill.General(type) ?? skill.FirstOrDefault(n => n.type == type);
             }
 
             SkillType ConvertSkillType(char c)
@@ -275,5 +285,31 @@ namespace PCRTimeline
             }
         }
 
+
+        class CharactorOrder
+        {
+            List<string> list = new List<string>();
+
+
+            public int GetOrder(string name)
+            {
+                return list.FindIndex(n => n == name);
+            }
+
+            public void Load(string filename)
+            {
+                using (var file = new System.IO.StreamReader(filename))
+                {
+                    while (!file.EndOfStream)
+                    {
+                        var line = file.ReadLine();
+                        if (0 < line.Length)
+                        {
+                            list.Add(line);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

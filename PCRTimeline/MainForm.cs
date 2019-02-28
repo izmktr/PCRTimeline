@@ -19,6 +19,8 @@ namespace PCRTimeline
         System.Windows.Forms.ImageList imageList = new System.Windows.Forms.ImageList();
 
         List<Battler> battlerlist = new List<Battler>();
+        CharactorOrder order = new CharactorOrder();
+
 
         TimelineForm timeline;
         CharaForm chara;
@@ -63,6 +65,7 @@ namespace PCRTimeline
                 }
             }
 
+            avatarlist[0].Save("test.xml");
         }
 
         private Image CreateIcon(Avatar avatar)
@@ -81,7 +84,9 @@ namespace PCRTimeline
 
         private void Form1_Load(object sender, EventArgs e)
         {
-//            XmlWrite.SampleWrite();
+            //            XmlWrite.SampleWrite();
+
+            DataLoad();
 
             AvatarLoad();
 
@@ -89,6 +94,11 @@ namespace PCRTimeline
 
             OpenChara();
 
+        }
+
+        private void DataLoad()
+        {
+            order.Load("Data\\order.txt");
         }
 
         private void OpenChara()

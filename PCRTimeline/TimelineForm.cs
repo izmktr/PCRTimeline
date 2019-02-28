@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
 
@@ -24,8 +25,7 @@ namespace PCRTimeline
         enum TimelineType
         {
             None,
-            ActStart,
-            ActEnd,
+            Interval,
             EffectStart,
             EffectEnd,
         }
@@ -51,6 +51,7 @@ namespace PCRTimeline
             public Rectangle rect;
             public Battler battler;
             public CustomSkill skill;
+            public CustomSkill before;
         }
         List<ClickPoint> clickablepoint = new List<ClickPoint>();
 
@@ -68,20 +69,28 @@ namespace PCRTimeline
         static IEnumerable<(CustomSkill skill, Rectangle rect)> SkillRectangle(IEnumerable<CustomSkill> timeline, int y, int secondsize, int hoffset)
         {
             float time = 0f;
-            foreach (var item in timeline)
+            foreach (var cskill in timeline)
             {
-                int x = (int)((time + item.interval) * secondsize + IconSize) - hoffset;
-                int width = (int)(item.interval * secondsize);
-                if (0 < item.interval && width < 8) width = 8;
+                int x = (int)(time * secondsize + IconSize) - hoffset;
+                int width = (int)(cskill.interval * secondsize);
 
-                Rectangle skillrect = new Rectangle(x, y + 4, width, IconSize - 16);
+                Rectangle skillrect;
+                int minwidth = 4;
+                if (width < minwidth)
+                {
+                    skillrect = new Rectangle(x, y + 0, minwidth, IconSize - 8);
+                }
+                else
+                {
+                    skillrect = new Rectangle(x, y + 4, width, IconSize - 16);
+                }
 
-                yield return (item, skillrect);
+                yield return (cskill, skillrect);
 
-                time += item.interval;
+                time += cskill.interval;
 
                 if (limittime < time) break;
-                if (item.Type == SkillType.Dead) break;
+                if (cskill.Type == SkillType.Dead) break;
             }
         }
 
@@ -108,16 +117,18 @@ namespace PCRTimeline
             foreach (var battler in battlerlist)
             {
                 float time = 0f;
+                CustomSkill before = null;
                 foreach (var (skill, rect) in SkillRectangle(battler.timeline, y, secondsize, hScrollBar1.Value))
                 {
                     DrawSkill(g, battler, skill, rect);
 
-                    AddDragPoint(skill, rect);
-                    AddClickPoint(battler, skill, rect);
+                    AddDragPoint(skill, rect, before);
+                    AddClickPoint(battler, skill, rect, before);
+                    before = skill;
                 }
 
                 time = 0f;
-                var shiftHeight = new int[10];
+                var shiftHeight = new int[10];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
                 foreach (var item in battler.timeline)
                 {
                     int x = (int)((time + item.interval) * secondsize + IconSize) - this.hScrollBar1.Value;
@@ -148,7 +159,7 @@ namespace PCRTimeline
             hScrollBar1.LargeChange = this.Width;
         }
 
-        private void AddClickPoint(Battler battler, CustomSkill item, Rectangle skillrect)
+        private void AddClickPoint(Battler battler, CustomSkill skill, Rectangle skillrect, CustomSkill before)
         {
             if (0 < skillrect.Width)
             {
@@ -156,34 +167,33 @@ namespace PCRTimeline
                 {
                     battler = battler,
                     rect = skillrect,
-                    skill = item
+                    skill = skill,
+                    before = before
                 });
             }
         }
 
-        private void AddDragPoint(CustomSkill current, Rectangle skillrect)
+        private void AddDragPoint(CustomSkill current, Rectangle skillrect, CustomSkill before)
         {
-            if (0 < current.interval)
+            if (0 < current.interval && before != null)
             {
-//                 dragablepoint.Add(new DragPoint(
-//                     new Rectangle(skillrect.Right - clickband / 2, skillrect.Y, clickband, skillrect.Height), TimelineType.ActStart, current
-//                     ));
-
-                int actwidth = (int)(current.interval * secondsize);
                 dragablepoint.Add(new DragPoint(
-                    new Rectangle(skillrect.X, skillrect.Y, actwidth, skillrect.Height), TimelineType.ActEnd, current)
+                    skillrect, TimelineType.Interval, current)
                     );
             }
         }
 
         private void DrawSkill(Graphics g, Battler battler, CustomSkill item, Rectangle skillrect)
         {
-            Image image = battler.avatar.image;
-
-            var brush = GetBrush(item);
             if (0 < skillrect.Width)
             {
-                g.FillRectangle(brush, skillrect);
+                Image image = battler.avatar.image;
+
+                var color = GetColor(item);
+                LinearGradientBrush gb = new LinearGradientBrush(
+                    skillrect, color, Color.White, LinearGradientMode.Horizontal);
+
+                g.FillRectangle(gb, skillrect);
                 g.DrawRectangle(Pens.DarkGray, skillrect);
                 if (item.darty)
                 {
@@ -192,7 +202,7 @@ namespace PCRTimeline
                     g.DrawRectangle(Pens.DarkGray, flute);
                 }
 
-                if (item.IsSkill)
+                if (item.name != null && item.Type != SkillType.Attack)
                 {
                     var clip = g.ClipBounds;
                     g.SetClip(skillrect);
@@ -241,51 +251,42 @@ namespace PCRTimeline
             }
         }
 
-        private Brush GetBrush(CustomSkill skill)
+        private Color GetColor(CustomSkill skill)
         {
             switch (skill.Type)
             {
                 case SkillType.Opening:
-                    return Brushes.White;
+                    return Color.White;
                 case SkillType.Attack:
-                    return Brushes.LightBlue;
+                    return Color.LightBlue;
                 case SkillType.Skill1:
-                    return Brushes.Orange;
+                    return Color.Orange;
                 case SkillType.Skill2:
-                    return Brushes.LightPink;
+                    return Color.LightPink;
                 case SkillType.UnionBurst:
-                    return Brushes.Red;
+                    return Color.Red;
                 case SkillType.Bind:
-                    return Brushes.LightYellow;
+                    return Color.LightYellow;
                 case SkillType.Dead:
-                    return Brushes.DarkGray;
+                    return Color.DarkGray;
                 default:
-                    return Brushes.White;
+                    return Color.White;
             }
         }
 
         private void TimelineForm_MouseMove(object sender, MouseEventArgs e)
         {
-            ChangeCursor(e);
+//            ChangeCursor(e);
 
             if (drag != null)
             {
-                float value = dragvalue + (e.Location.X - draglocation.X) / (float) secondsize;
-                if (value < 0.25f) value = 0.25f;
-
                 switch (drag.dragpoint)
                 {
-                    case TimelineType.ActStart:
-                        drag.skill.adjustment = value;
-                        break;
-                    case TimelineType.ActEnd:
-                        drag.skill.adjustment = value;
-                        break;
-                    case TimelineType.EffectStart:
-                        drag.skill.effect.delay = value;
-                        break;
-                    case TimelineType.EffectEnd:
-                        drag.skill.effect.duration = value;
+                    case TimelineType.Interval:
+                        {
+                            float value = dragvalue + (e.Location.X - draglocation.X) / (float)secondsize;
+                            drag.skill.adjustment = Math.Max(value, -drag.skill.orginterval);
+                        }
                         break;
                     default:
                         break;
@@ -336,8 +337,7 @@ namespace PCRTimeline
                         if (item.Type == SkillType.Dead) break;
                     }
 
-                    //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
-
+                    //アイコンの表示
                     Image avatarimage = battler.avatar.image;
                     g.DrawImage(avatarimage, 0, y, avatarimage.Width, avatarimage.Height);
 
@@ -346,22 +346,6 @@ namespace PCRTimeline
             }
 
             return image;
-        }
-
-        private void ChangeCursor(MouseEventArgs e)
-        {
-            foreach (var click in dragablepoint)
-            {
-                if (click.rect.Contains(e.X, e.Y))
-                {
-                    if (click.dragpoint == TimelineType.ActStart)
-                    {
-                        this.Cursor = Cursors.SizeWE;
-                        return;
-                    }
-                }
-            }
-            this.Cursor = Cursors.Default;
         }
 
         private void TimelineForm_MouseDown(object sender, MouseEventArgs e)
@@ -374,11 +358,8 @@ namespace PCRTimeline
                     draglocation = e.Location;
                     switch (drag.dragpoint)
                     {
-                        case TimelineType.ActStart:
-//                            dragvalue = drag.skill.acttime;
-                            break;
-                        case TimelineType.ActEnd:
-                            dragvalue = drag.skill.interval;
+                        case TimelineType.Interval:
+                            dragvalue = drag.skill.adjustment;
                             break;
                         case TimelineType.EffectStart:
                             dragvalue = drag.skill.effect.delay;
@@ -412,14 +393,27 @@ namespace PCRTimeline
 
                 if (clickpoint != null)
                 {
-                    resetToolStripMenuItem.Enabled = clickpoint.skill.basic && clickpoint.skill.darty;
-                    deleteDataToolStripMenuItem.Enabled  = !clickpoint.skill.basic || clickpoint.skill.Type == SkillType.UnionBurst;
+                    resetToolStripMenuItem.Enabled = clickpoint.skill.darty;
+                    deleteDataToolStripMenuItem.Enabled = Deleteable(clickpoint.skill);
 
                     //指定した画面上の座標位置にコンテキストメニューを表示する
                     this.contextMenuStrip1.Show(p);
                 }
             }
 
+        }
+
+        private bool Deleteable(CustomSkill skill)
+        {
+            switch (skill.Type)
+            {
+                case SkillType.UnionBurst:
+                case SkillType.Bind:
+                case SkillType.Dead:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
