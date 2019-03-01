@@ -80,6 +80,7 @@
     <Compile Include="CharaForm.Designer.cs">
       <DependentUpon>CharaForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GoogleSpreadSheet.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +118,9 @@
     <EmbeddedResource Include="TimelineForm.resx">
       <DependentUpon>TimelineForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Resource\credentials.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

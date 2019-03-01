@@ -41,23 +41,6 @@ namespace PCRTimeline
             }
         }
 
-        public bool IsSkill
-        {
-            get
-            {
-                switch (Type)
-                {
-                    case SkillType.Skill1:
-                    case SkillType.Skill2:
-                    case SkillType.Skill3:
-                    case SkillType.Skill4:
-                    case SkillType.Skill5:
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        }
         public string name => original.name;
 
         public Effect effect => original.effect;
