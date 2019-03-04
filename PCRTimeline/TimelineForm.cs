@@ -175,7 +175,7 @@ namespace PCRTimeline
 
         private void AddDragPoint(CustomSkill current, Rectangle skillrect, CustomSkill before)
         {
-            if (0 < current.interval && before != null)
+            if (0 < skillrect.Width)
             {
                 dragablepoint.Add(new DragPoint(
                     skillrect, TimelineType.Interval, current)

@@ -94,6 +94,11 @@ namespace PCRTimeline
 
             OpenChara();
 
+
+            GoogleSpreadSheet sheet = new GoogleSpreadSheet();
+
+            sheet.ReadSecretFromResource();
+
         }
 
         private void DataLoad()
