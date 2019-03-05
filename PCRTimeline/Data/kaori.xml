@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Avatar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <name>ジュン</name>
-  <aliasName>jyun</aliasName>
+  <name>カオリ</name>
+  <aliasName>kaori</aliasName>
   <icon>icon\jyun.png</icon>
   <position>1</position>
   <skill>
@@ -39,7 +39,7 @@
     </Skill>
     <Skill>
       <type>Skill1</type>
-      <name>ブレイブリカバリー</name>
+      <name>正中線突き</name>
       <acttimelist>
         <ActTime>
           <nexttype>Attack</nexttype>
@@ -50,7 +50,7 @@
     </Skill>
     <Skill>
       <type>Skill2</type>
-      <name>アーマーブレイク</name>
+      <name>精神統一</name>
       <acttimelist>
         <ActTime>
           <nexttype>Attack</nexttype>
@@ -66,7 +66,7 @@
     </Skill>
     <Skill>
       <type>UnionBurst</type>
-      <name>インフェルノシールド</name>
+      <name>琉球犬ナックルアロー</name>
       <acttimelist>
         <ActTime>
           <nexttype>Default</nexttype>
@@ -76,5 +76,5 @@
       </acttimelist>
     </Skill>
   </skill>
-  <actionOrder>O21[AA2A1]</actionOrder>
+  <actionOrder>O21[A1AA1]</actionOrder>
 </Avatar>

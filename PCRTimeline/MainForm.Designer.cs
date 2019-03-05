@@ -48,8 +48,6 @@
             this.timelineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.charaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.developToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tlimportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,8 +57,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.scopeToolStripMenuItem,
-            this.windowToolStripMenuItem,
-            this.developToolStripMenuItem});
+            this.windowToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(819, 24);
@@ -206,7 +203,7 @@
             this.timelineToolStripMenuItem.Checked = true;
             this.timelineToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.timelineToolStripMenuItem.Name = "timelineToolStripMenuItem";
-            this.timelineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.timelineToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.timelineToolStripMenuItem.Text = "タイムライン(&T)";
             this.timelineToolStripMenuItem.Click += new System.EventHandler(this.timelineToolStripMenuItem_Click);
             // 
@@ -215,7 +212,7 @@
             this.charaToolStripMenuItem.Checked = true;
             this.charaToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.charaToolStripMenuItem.Name = "charaToolStripMenuItem";
-            this.charaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.charaToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.charaToolStripMenuItem.Text = "キャラクター(&C)";
             this.charaToolStripMenuItem.Click += new System.EventHandler(this.charaToolStripMenuItem_Click);
             // 
@@ -228,21 +225,6 @@
             this.dockPanel1.Size = new System.Drawing.Size(819, 441);
             this.dockPanel1.TabIndex = 1;
             // 
-            // developToolStripMenuItem
-            // 
-            this.developToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tlimportToolStripMenuItem});
-            this.developToolStripMenuItem.Name = "developToolStripMenuItem";
-            this.developToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
-            this.developToolStripMenuItem.Text = "開発(&D)";
-            // 
-            // tlimportToolStripMenuItem
-            // 
-            this.tlimportToolStripMenuItem.Name = "tlimportToolStripMenuItem";
-            this.tlimportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.tlimportToolStripMenuItem.Text = "TLインポート";
-            this.tlimportToolStripMenuItem.Click += new System.EventHandler(this.TlimportToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -251,7 +233,7 @@
             this.Controls.Add(this.dockPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainForm";
             this.Text = "PCR Timeline";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -284,8 +266,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem insertOpenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem developToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tlimportToolStripMenuItem;
     }
 }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Avatar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <name>ジュン</name>
-  <aliasName>jyun</aliasName>
-  <icon>icon\jyun.png</icon>
+  <name>アカリ</name>
+  <aliasName>akari</aliasName>
+  <icon>icon\akari.png</icon>
   <position>1</position>
   <skill>
     <Skill>
@@ -11,7 +11,7 @@
       <acttimelist>
         <ActTime>
           <nexttype>Default</nexttype>
-          <interval>3.5</interval>
+          <interval>3.133</interval>
           <solidtime>0</solidtime>
         </ActTime>
       </acttimelist>
@@ -22,51 +22,51 @@
       <acttimelist>
         <ActTime>
           <nexttype>Attack</nexttype>
-          <interval>3.301</interval>
+          <interval>3.385</interval>
           <solidtime>1.135</solidtime>
         </ActTime>
         <ActTime>
           <nexttype>Skill1</nexttype>
-          <interval>2.068</interval>
+          <interval>2.402</interval>
           <solidtime>1.135</solidtime>
         </ActTime>
         <ActTime>
           <nexttype>Skill2</nexttype>
-          <interval>1.668</interval>
+          <interval>2.485</interval>
           <solidtime>1.135</solidtime>
         </ActTime>
       </acttimelist>
     </Skill>
     <Skill>
       <type>Skill1</type>
-      <name>ブレイブリカバリー</name>
+      <name>シャドウボルト</name>
       <acttimelist>
         <ActTime>
           <nexttype>Attack</nexttype>
-          <interval>5.068</interval>
+          <interval>4.301666667</interval>
           <solidtime>2.768</solidtime>
         </ActTime>
       </acttimelist>
     </Skill>
     <Skill>
       <type>Skill2</type>
-      <name>アーマーブレイク</name>
+      <name>小悪魔のキス</name>
       <acttimelist>
         <ActTime>
           <nexttype>Attack</nexttype>
-          <interval>4.668</interval>
+          <interval>4.218</interval>
           <solidtime>2.302</solidtime>
         </ActTime>
         <ActTime>
           <nexttype>Skill1</nexttype>
-          <interval>3.035</interval>
+          <interval>3.235</interval>
           <solidtime>2.302</solidtime>
         </ActTime>
       </acttimelist>
     </Skill>
     <Skill>
       <type>UnionBurst</type>
-      <name>インフェルノシールド</name>
+      <name>スイートデビルエール</name>
       <acttimelist>
         <ActTime>
           <nexttype>Default</nexttype>

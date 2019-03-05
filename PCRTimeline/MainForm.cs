@@ -95,9 +95,9 @@ namespace PCRTimeline
             OpenChara();
 
 
-            GoogleSpreadSheet sheet = new GoogleSpreadSheet();
-
-            sheet.ReadSecretFromResource();
+//             GoogleSpreadSheet sheet = new GoogleSpreadSheet();
+// 
+//             sheet.ReadSecretFromResource();
 
         }
 
@@ -394,10 +394,6 @@ namespace PCRTimeline
             }
         }
 
-        private void TLimportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
 
