@@ -226,7 +226,7 @@ namespace PCRTimeline
             var lparen = GetNext();
             if (lparen == null || lparen.op != Operator.LParen)
             {
-                Unget();
+                if (lparen != null) Unget();
                 return new NodeFunction(funcname.str, null);
             }
 
