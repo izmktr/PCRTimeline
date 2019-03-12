@@ -146,6 +146,8 @@ namespace PCRTimeline
             {
                 int loopindex = 0;
 
+                yield return ConvertSkill('o');
+
                 for (int index = 0; index < actionOrder.Length; index++)
                 {
                     var c = actionOrder[index];
@@ -156,6 +158,9 @@ namespace PCRTimeline
                             break;
                         case ']':
                             index = loopindex;
+                            break;
+                        case 'o':
+                        case 'O':
                             break;
                         default:
                             yield return ConvertSkill(c);

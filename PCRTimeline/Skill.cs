@@ -57,4 +57,20 @@ namespace PCRTimeline
         }
     }
 
+    enum TargetType
+    {
+        None,
+        Self,
+        Player,
+        Enemy,
+    }
+
+    class SkillEffect
+    {
+        public TargetType target = TargetType.None;
+        public SkillEffectType effecttype = SkillEffectType.None;
+        public float delay = 0f;
+        public float duration = 0f;
+        public string expression = "";
+    }
 }

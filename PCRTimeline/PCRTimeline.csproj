@@ -79,7 +79,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionOrder.cs" />
     <Compile Include="Avatar.cs" />
     <Compile Include="AvatarStatus.cs" />
     <Compile Include="Battler.cs" />

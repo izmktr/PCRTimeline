@@ -36,7 +36,7 @@ namespace PCRTimeline
 
         void AvatarLoad()
         {
-            {
+            if (false){
                 const string path = @"Data\";
                 string[] files = System.IO.Directory.GetFiles(path, "*.xml", System.IO.SearchOption.AllDirectories);
 
@@ -64,8 +64,6 @@ namespace PCRTimeline
                     avatarlist.Add(avatar);
                 }
             }
-
-            avatarlist[0].Save("test.xml");
         }
 
         private Image CreateIcon(Avatar avatar)
@@ -394,6 +392,28 @@ namespace PCRTimeline
             }
         }
 
+        private void CSVImportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<Avatar> importAvatarList = new List<Avatar>();
+
+            CSVData c = new CSVData();
+
+            c.ReadBasicStatus(@"Data\BasicStatus.csv", importAvatarList);
+            c.ReadSkillName(@"Data\SkillName.csv", importAvatarList);
+            c.ReadSkillTime(@"Data\SkillTime.csv", importAvatarList);
+
+            importAvatarList.RemoveAll(n => n.skill.Sum(m => m.acttimelist.Count) == 0);
+
+            foreach (var item in importAvatarList)
+            {
+                System.Xml.Serialization.XmlSerializer serializer1 =
+                    new System.Xml.Serialization.XmlSerializer(typeof(Avatar));
+                System.IO.StreamWriter sw = new System.IO.StreamWriter(
+                    $@"Data\{item.aliasName}.xml", false, new System.Text.UTF8Encoding(false));
+                serializer1.Serialize(sw, item);
+
+            }
+        }
     }
 }
 
