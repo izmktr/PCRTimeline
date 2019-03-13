@@ -36,7 +36,7 @@ namespace PCRTimeline
 
         void AvatarLoad()
         {
-            if (false){
+            {
                 const string path = @"Data\";
                 string[] files = System.IO.Directory.GetFiles(path, "*.xml", System.IO.SearchOption.AllDirectories);
 
@@ -82,7 +82,6 @@ namespace PCRTimeline
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //            XmlWrite.SampleWrite();
 
             DataLoad();
 

@@ -127,20 +127,31 @@ namespace PCRTimeline
             using (var csv = new CsvReader(streamReader))
             {
                 csv.Configuration.HasHeaderRecord = false;
-                var skill = csv.GetRecords<CSVSkillTime>();
-                foreach (var p in skill)
+                var skilltime = csv.GetRecords<CSVSkillTime>();
+                foreach (var p in skilltime)
                 {
-                    var first = avatarlist.FirstOrDefault(n => n.aliasName == p.aliasName)
-                        ?.skill.FirstOrDefault(n => n.type == p.skillalias);
-                    if (first != null)
+                    var avatar = avatarlist.FirstOrDefault(n => n.aliasName == p.aliasName);
+                    if (avatar == null) continue;
+
+                    var skill = avatar.skill.FirstOrDefault(n => n.type == p.skillalias);
+
+                    if (skill == null)
                     {
-                        first.acttimelist.Add(new ActTime()
+                        skill = new Skill()
                         {
-                            nexttype = p.nextskillalias,
-                            interval = p.intervalTime,
-                            solidtime = 0f,
-                        });
+                            type = p.skillalias,
+                            name = p.skillalias.ToString(),
+                        };
+
+                        avatar.skill.Add(skill);
                     }
+
+                    skill.acttimelist.Add(new ActTime()
+                    {
+                        nexttype = p.nextskillalias,
+                        interval = p.intervalTime,
+                        solidtime = 0f,
+                    });
                 }
             }
         }
