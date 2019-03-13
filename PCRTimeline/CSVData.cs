@@ -19,22 +19,30 @@ namespace PCRTimeline
         public string actionOrder { get; set; }
     }
 
-    class CSVStatus
+    class CSVBattleStatus
     {
         public string aliasName { get; set; }
-        public int MaxHp { get; set; }
+        public int Star { get; set; }
+        public int Level { get; set; }
+        public int Rank { get; set; }
+        public int Equip { get; set; }
         public int PAtk { get; set; }
         public int PDef { get; set; }
-        public int PCri { get; set; }
-        public int MAtk { get; set; }
-        public int MDef { get; set; }
-        public int MCri { get; set; }
-        public int Hit { get; set; }
+        public int MaxHp { get; set; }
         public int Avoid { get; set; }
-        public int HealUp { get; set; }
-        public int TPUp { get; set; }
+        public int Accuracy { get; set; }
         public int HPAuto { get; set; }
         public int TPAuto { get; set; }
+        public int HPDrain { get; set; }
+        public int HealUp { get; set; }
+        public int TPUp { get; set; }
+        public int TPReduction { get; set; }
+        public int Move { get; set; }
+        public int MAtk { get; set; }
+        public int MDef { get; set; }
+        public int PCri { get; set; }
+        public int MCri { get; set; }
+        public int Reach { get; set; }
     }
 
     class CSVSkillName

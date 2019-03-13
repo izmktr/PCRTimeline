@@ -102,6 +102,8 @@ namespace PCRTimeline
             UnionBurst,
             Bind,
             Dead,
+            Ex,
+            ExPlus
         }
 
         public enum BuffEffectType
