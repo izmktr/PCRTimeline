@@ -37,6 +37,8 @@
             this.bindToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.skillToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,12 +60,12 @@
             this.addDataToolStripMenuItem,
             this.deleteDataToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(141, 88);
             // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(140, 28);
             this.resetToolStripMenuItem.Text = "リセット";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
@@ -74,36 +76,41 @@
             this.bindToolStripMenuItem,
             this.deadToolStripMenuItem});
             this.addDataToolStripMenuItem.Name = "addDataToolStripMenuItem";
-            this.addDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addDataToolStripMenuItem.Size = new System.Drawing.Size(140, 28);
             this.addDataToolStripMenuItem.Text = "追加";
             // 
             // unionburstToolStripMenuItem
             // 
             this.unionburstToolStripMenuItem.Name = "unionburstToolStripMenuItem";
-            this.unionburstToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.unionburstToolStripMenuItem.Size = new System.Drawing.Size(206, 28);
             this.unionburstToolStripMenuItem.Text = "ユニオンバースト";
             this.unionburstToolStripMenuItem.Click += new System.EventHandler(this.unionburstToolStripMenuItem_Click);
             // 
             // bindToolStripMenuItem
             // 
             this.bindToolStripMenuItem.Name = "bindToolStripMenuItem";
-            this.bindToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bindToolStripMenuItem.Size = new System.Drawing.Size(206, 28);
             this.bindToolStripMenuItem.Text = "行動不能";
             this.bindToolStripMenuItem.Click += new System.EventHandler(this.bindToolStripMenuItem_Click);
             // 
             // deadToolStripMenuItem
             // 
             this.deadToolStripMenuItem.Name = "deadToolStripMenuItem";
-            this.deadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deadToolStripMenuItem.Size = new System.Drawing.Size(206, 28);
             this.deadToolStripMenuItem.Text = "戦闘不能";
             this.deadToolStripMenuItem.Click += new System.EventHandler(this.deadToolStripMenuItem_Click);
             // 
             // deleteDataToolStripMenuItem
             // 
             this.deleteDataToolStripMenuItem.Name = "deleteDataToolStripMenuItem";
-            this.deleteDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteDataToolStripMenuItem.Size = new System.Drawing.Size(140, 28);
             this.deleteDataToolStripMenuItem.Text = "削除";
             this.deleteDataToolStripMenuItem.Click += new System.EventHandler(this.deleteDataToolStripMenuItem_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // TimelineForm
             // 
@@ -131,5 +138,7 @@
         private System.Windows.Forms.ToolStripMenuItem unionburstToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bindToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deadToolStripMenuItem;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolTip skillToolTip;
     }
 }

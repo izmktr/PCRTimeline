@@ -32,15 +32,26 @@ namespace PCRTimeline
 
         class DragPoint
         {
+            public float start;
             public Rectangle rect;
             public TimelineType dragpoint;
             public CustomSkill skill;
 
-            public DragPoint(Rectangle rect, TimelineType dragpoint, CustomSkill skill)
+            public DragPoint(float start, Rectangle rect, TimelineType dragpoint, CustomSkill skill)
             {
+                this.start = start;
                 this.rect = rect;
                 this.dragpoint = dragpoint;
                 this.skill = skill;
+            }
+
+            public string Infomation()
+            {
+                float time = 90f - start;
+                int minute = (int) time / 60;
+                int second = (int) time % 60;
+
+                return $"[{minute}:{second.ToString("D2")}]{skill.name}";
             }
         }
         List<DragPoint> dragablepoint = new List<DragPoint>();
@@ -56,9 +67,12 @@ namespace PCRTimeline
         List<ClickPoint> clickablepoint = new List<ClickPoint>();
 
         DragPoint drag = null;
+        DragPoint tooltip = null;
         private float dragvalue;
         private Point draglocation;
         private ClickPoint clickpoint;
+        private int toolTipTime;
+        private Point prevPosition;
 
         public TimelineForm()
         {
@@ -116,15 +130,16 @@ namespace PCRTimeline
 
             foreach (var battler in battlerlist)
             {
-                float time = 0f;
                 CustomSkill before = null;
+                float time = 0f;
                 foreach (var (skill, rect) in SkillRectangle(battler.timeline, y, secondsize, hScrollBar1.Value))
                 {
                     DrawSkill(g, battler, skill, rect);
 
-                    AddDragPoint(skill, rect, before);
+                    AddDragPoint(time, skill, rect, before);
                     AddClickPoint(battler, skill, rect, before);
                     before = skill;
+                    time += skill.interval;
                 }
 
                 time = 0f;
@@ -173,12 +188,12 @@ namespace PCRTimeline
             }
         }
 
-        private void AddDragPoint(CustomSkill current, Rectangle skillrect, CustomSkill before)
+        private void AddDragPoint(float time, CustomSkill current, Rectangle skillrect, CustomSkill before)
         {
             if (0 < skillrect.Width)
             {
                 dragablepoint.Add(new DragPoint(
-                    skillrect, TimelineType.Interval, current)
+                    time, skillrect, TimelineType.Interval, current)
                     );
             }
         }
@@ -276,8 +291,23 @@ namespace PCRTimeline
 
         private void TimelineForm_MouseMove(object sender, MouseEventArgs e)
         {
-//            ChangeCursor(e);
+            if (prevPosition != e.Location)
+            {
+                if (skillToolTip.Active)
+                {
+                    prevPosition = e.Location;
+                    toolTipTime = 0;
+                    skillToolTip.Hide(this);
+                }
 
+                if (drag == null)
+                {
+                    tooltip = dragablepoint.Find(n => n.rect.Contains(e.Location));
+                }
+
+            }
+
+            //            ChangeCursor(e);
             if (drag != null)
             {
                 switch (drag.dragpoint)
@@ -478,6 +508,22 @@ namespace PCRTimeline
                 }
                 this.Invalidate();
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (0 <= toolTipTime && drag == null && tooltip != null)
+            {
+                toolTipTime += timer1.Interval;
+
+                if (skillToolTip.AutomaticDelay < toolTipTime)
+                {
+                    var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
+                    skillToolTip.Show(tooltip.Infomation(), this, mouse.X, mouse.Y);
+                    toolTipTime = -1;
+                }
+            }
+
         }
     }
 }
