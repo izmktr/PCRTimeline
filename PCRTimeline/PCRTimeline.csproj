@@ -90,6 +90,12 @@
       <DependentUpon>CharaForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CSVData.cs" />
+    <Compile Include="DataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataForm.Designer.cs">
+      <DependentUpon>DataForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GoogleSpreadSheet.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -111,6 +117,9 @@
     <Compile Include="XmlWrite.cs" />
     <EmbeddedResource Include="CharaForm.resx">
       <DependentUpon>CharaForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataForm.resx">
+      <DependentUpon>DataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

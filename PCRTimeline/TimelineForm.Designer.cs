@@ -116,6 +116,8 @@
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.hScrollBar1);
+            this.DoubleBuffered = true;
+            this.HideOnClose = true;
             this.Name = "TimelineForm";
             this.Text = "Timeline";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.TimelineForm_Paint);
