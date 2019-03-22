@@ -139,6 +139,7 @@
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.tabControl);
+            this.HideOnClose = true;
             this.Name = "CharaForm";
             this.Text = "Charactor";
             this.Load += new System.EventHandler(this.CharaForm_Load);

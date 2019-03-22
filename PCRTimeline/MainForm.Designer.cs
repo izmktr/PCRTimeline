@@ -47,6 +47,7 @@
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timelineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.charaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.developToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.csvImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
@@ -197,17 +198,19 @@
             // 
             this.windowToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.timelineToolStripMenuItem,
-            this.charaToolStripMenuItem});
+            this.charaToolStripMenuItem,
+            this.dataToolStripMenuItem});
             this.windowToolStripMenuItem.Name = "windowToolStripMenuItem";
             this.windowToolStripMenuItem.Size = new System.Drawing.Size(126, 27);
             this.windowToolStripMenuItem.Text = "ウィンドウ(&W)";
+            this.windowToolStripMenuItem.DropDownOpening += new System.EventHandler(this.windowToolStripMenuItem_DropDownOpening);
             // 
             // timelineToolStripMenuItem
             // 
             this.timelineToolStripMenuItem.Checked = true;
             this.timelineToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.timelineToolStripMenuItem.Name = "timelineToolStripMenuItem";
-            this.timelineToolStripMenuItem.Size = new System.Drawing.Size(200, 28);
+            this.timelineToolStripMenuItem.Size = new System.Drawing.Size(216, 28);
             this.timelineToolStripMenuItem.Text = "タイムライン(&T)";
             this.timelineToolStripMenuItem.Click += new System.EventHandler(this.timelineToolStripMenuItem_Click);
             // 
@@ -216,9 +219,16 @@
             this.charaToolStripMenuItem.Checked = true;
             this.charaToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.charaToolStripMenuItem.Name = "charaToolStripMenuItem";
-            this.charaToolStripMenuItem.Size = new System.Drawing.Size(200, 28);
+            this.charaToolStripMenuItem.Size = new System.Drawing.Size(216, 28);
             this.charaToolStripMenuItem.Text = "キャラクター(&C)";
             this.charaToolStripMenuItem.Click += new System.EventHandler(this.charaToolStripMenuItem_Click);
+            // 
+            // dataToolStripMenuItem
+            // 
+            this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
+            this.dataToolStripMenuItem.Size = new System.Drawing.Size(216, 28);
+            this.dataToolStripMenuItem.Text = "データ(&D)";
+            this.dataToolStripMenuItem.Click += new System.EventHandler(this.dataToolStripMenuItem_Click);
             // 
             // developToolStripMenuItem
             // 
@@ -288,6 +298,7 @@
         private System.Windows.Forms.ToolStripMenuItem insertOpenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem developToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem csvImportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dataToolStripMenuItem;
     }
 }
 

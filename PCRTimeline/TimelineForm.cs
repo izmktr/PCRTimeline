@@ -76,7 +76,6 @@ namespace PCRTimeline
 
         public TimelineForm()
         {
-            DoubleBuffered = true;
             InitializeComponent();
         }
 

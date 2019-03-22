@@ -24,6 +24,7 @@ namespace PCRTimeline
 
         TimelineForm timeline;
         CharaForm chara;
+        DataForm dataform;
 
         string currentFilename = "";
 
@@ -91,6 +92,8 @@ namespace PCRTimeline
 
             OpenChara();
 
+            OpenDataForm();
+
 
 //             GoogleSpreadSheet sheet = new GoogleSpreadSheet();
 // 
@@ -109,8 +112,6 @@ namespace PCRTimeline
             chara.avatarlist = avatarlist;
             chara.battlelist = battlerlist;
             chara.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.DockBottom);
-
-            chara.FormClosed += (s, e) => charaToolStripMenuItem.Checked = false;
         }
 
         private void OpenTimeline()
@@ -119,8 +120,13 @@ namespace PCRTimeline
             timeline.battlerlist = battlerlist;
             timeline.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             timeline.scope = scope;
+        }
 
-            timeline.FormClosed += (s, e) => timelineToolStripMenuItem.Checked = false;
+        private void OpenDataForm()
+        {
+            dataform = new DataForm();
+            dataform.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Float);
+            dataform.Hide();
         }
 
         Point mouseDownPoint = Point.Empty;
@@ -251,35 +257,31 @@ namespace PCRTimeline
             ScopeChange(4);
         }
 
-        private void timelineToolStripMenuItem_Click(object sender, EventArgs e)
+        private static void FormShowHide(ToolStripMenuItem toolstrip, WeifenLuo.WinFormsUI.Docking.DockContent form)
         {
-            if (timelineToolStripMenuItem.Checked)
+            if (toolstrip.Checked)
             {
-                timeline.Close();
-                timeline = null;
-                timelineToolStripMenuItem.Checked = false;
+                form.Hide();
             }
             else
             {
-                OpenTimeline();
-                timelineToolStripMenuItem.Checked = true;
+                form.Show();
             }
+        }
+
+        private void timelineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormShowHide(timelineToolStripMenuItem, timeline);
         }
 
         private void charaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (charaToolStripMenuItem.Checked)
-            {
-                chara.Close();
-                chara = null;
-                charaToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                OpenChara();
-                charaToolStripMenuItem.Checked = true;
-            }
+            FormShowHide(charaToolStripMenuItem, chara);
+        }
 
+        private void dataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormShowHide(dataToolStripMenuItem, dataform);
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -412,6 +414,14 @@ namespace PCRTimeline
                 serializer1.Serialize(sw, item);
 
             }
+        }
+
+        private void windowToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            timelineToolStripMenuItem.Checked = !timeline.IsHidden;
+            charaToolStripMenuItem.Checked = !chara.IsHidden;
+            dataToolStripMenuItem.Checked = !dataform.IsHidden;
+
         }
     }
 }
