@@ -156,5 +156,34 @@ namespace PCRTimeline
             }
         }
 
+        public void ReadSkillEffect(string filename, List<Avatar> avatarlist)
+        {
+            using (var streamReader = new StreamReader(filename))
+            using (var csv = new CsvReader(streamReader))
+            {
+                csv.Configuration.HasHeaderRecord = false;
+                var skilleffect= csv.GetRecords<CSVSkillEffect>();
+                foreach (var p in skilleffect)
+                {
+                    var avatar = avatarlist.FirstOrDefault(n => n.aliasName == p.aliasName);
+                    if (avatar == null) continue;
+
+                    var skill = avatar.skill.FirstOrDefault(n => n.type == p.skillalias);
+
+                    if (skill == null)
+                    {
+                        skill = new Skill()
+                        {
+                            type = p.skillalias,
+                            name = p.skillalias.ToString(),
+                        };
+
+                        avatar.skill.Add(skill);
+                    }
+
+                    skill.Effect.Add(p);
+                }
+            }
+        }
     }
 }
