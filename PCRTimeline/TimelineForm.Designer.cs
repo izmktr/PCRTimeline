@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,18 +38,14 @@
             this.deleteDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.skillToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.floatTimeline = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.timelinePicture = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1.SuspendLayout();
+            this.floatTimeline.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timelinePicture)).BeginInit();
             this.SuspendLayout();
-            // 
-            // hScrollBar1
-            // 
-            this.hScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.hScrollBar1.Location = new System.Drawing.Point(0, 244);
-            this.hScrollBar1.Name = "hScrollBar1";
-            this.hScrollBar1.Size = new System.Drawing.Size(284, 17);
-            this.hScrollBar1.TabIndex = 0;
-            this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
             // 
             // contextMenuStrip1
             // 
@@ -112,27 +107,60 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // floatTimeline
+            // 
+            this.floatTimeline.AutoScroll = true;
+            this.floatTimeline.Controls.Add(this.timelinePicture);
+            this.floatTimeline.Controls.Add(this.pictureBox1);
+            this.floatTimeline.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.floatTimeline.Location = new System.Drawing.Point(0, 0);
+            this.floatTimeline.Name = "floatTimeline";
+            this.floatTimeline.Size = new System.Drawing.Size(284, 261);
+            this.floatTimeline.TabIndex = 1;
+            this.floatTimeline.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TimelineForm_Scroll);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.White;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(284, 261);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // timelinePicture
+            // 
+            this.timelinePicture.Location = new System.Drawing.Point(0, 0);
+            this.timelinePicture.Name = "timelinePicture";
+            this.timelinePicture.Size = new System.Drawing.Size(16, 16);
+            this.timelinePicture.TabIndex = 1;
+            this.timelinePicture.TabStop = false;
+            // 
             // TimelineForm
             // 
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.hScrollBar1);
+            this.Controls.Add(this.floatTimeline);
             this.DoubleBuffered = true;
             this.HideOnClose = true;
             this.Name = "TimelineForm";
             this.Text = "Timeline";
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.TimelineForm_Paint);
+            this.Load += new System.EventHandler(this.TimelineForm_Load);
+            this.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TimelineForm_Scroll);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseClick);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseUp);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.floatTimeline.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timelinePicture)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.HScrollBar hScrollBar1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addDataToolStripMenuItem;
@@ -142,5 +170,8 @@
         private System.Windows.Forms.ToolStripMenuItem deadToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolTip skillToolTip;
+        private System.Windows.Forms.Panel floatTimeline;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox timelinePicture;
     }
 }

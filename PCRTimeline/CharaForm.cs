@@ -144,7 +144,7 @@ namespace PCRTimeline
 
                 foreach (var form in Application.OpenForms)
                 {
-                    (form as TimelineForm)?.Invalidate();
+                    (form as TimelineForm)?.CreatePoint();
                 }
             }
 

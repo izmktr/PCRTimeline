@@ -181,7 +181,7 @@ namespace PCRTimeline
                         avatar.skill.Add(skill);
                     }
 
-                    skill.Effect.Add(p);
+//                    skill.Effect.Add(p);
                 }
             }
         }
