@@ -37,6 +37,7 @@ namespace PCRTimeline
             public Rectangle rect;
             public TimelineType dragpoint;
             public CustomSkill skill;
+            public AttackResult attackresult;
 
             public DragPoint(float start, Rectangle rect, TimelineType dragpoint, CustomSkill skill)
             {
@@ -44,6 +45,7 @@ namespace PCRTimeline
                 this.rect = rect;
                 this.dragpoint = dragpoint;
                 this.skill = skill;
+                this.attackresult = null;
             }
 
             public string Infomation()
@@ -120,6 +122,8 @@ namespace PCRTimeline
             dragablepoint.Clear();
             clickablepoint.Clear();
 
+            CalcDamage();
+
             int bindex = 0;
             foreach (var battler in battlerlist)
             {
@@ -146,6 +150,16 @@ namespace PCRTimeline
             pictureBox1.Image = image;
 
             Invalidate();
+        }
+
+        private void CalcDamage()
+        {
+            var enemy = battlerlist.Find(n => n.avatar.position == 0)?.avatar;
+            if (enemy == null)
+            {
+                enemy = new Avatar();
+            }
+
         }
 
         private void AddClickPoint(Battler battler, CustomSkill skill, Rectangle skillrect, CustomSkill before)
@@ -270,15 +284,13 @@ namespace PCRTimeline
                 if (skillToolTip.Active)
                 {
                     prevPosition = e.Location;
-                    toolTipTime = 0;
-                    skillToolTip.Hide(this);
-                }
 
-                if (drag == null)
-                {
-                    tooltip = dragablepoint.Find(n => n.rect.Contains(e.Location));
+                    if (tooltip == null || !tooltip.rect.Contains(e.Location))
+                    {
+                        toolTipTime = 0;
+                        skillToolTip.Hide(this);
+                    }
                 }
-
             }
 
             //            ChangeCursor(e);
@@ -485,14 +497,20 @@ namespace PCRTimeline
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (0 <= toolTipTime && drag == null && tooltip != null)
+            if (0 <= toolTipTime && drag == null)
             {
                 toolTipTime += timer1.Interval;
 
                 if (skillToolTip.AutomaticDelay < toolTipTime)
                 {
-                    var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
-                    skillToolTip.Show(tooltip.Infomation(), this, mouse.X, mouse.Y);
+                    var position = prevPosition;
+                    tooltip = dragablepoint.Find(n => n.rect.Contains(position));
+
+                    //                    var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
+                    if (tooltip != null)
+                    {
+                        skillToolTip.Show(tooltip.Infomation(), this, position);
+                    }
                     toolTipTime = -1;
                 }
             }

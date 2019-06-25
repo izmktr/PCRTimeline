@@ -39,12 +39,12 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.skillToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.floatTimeline = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timelinePicture = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1.SuspendLayout();
             this.floatTimeline.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.timelinePicture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -77,21 +77,21 @@
             // unionburstToolStripMenuItem
             // 
             this.unionburstToolStripMenuItem.Name = "unionburstToolStripMenuItem";
-            this.unionburstToolStripMenuItem.Size = new System.Drawing.Size(206, 28);
+            this.unionburstToolStripMenuItem.Size = new System.Drawing.Size(214, 28);
             this.unionburstToolStripMenuItem.Text = "ユニオンバースト";
             this.unionburstToolStripMenuItem.Click += new System.EventHandler(this.unionburstToolStripMenuItem_Click);
             // 
             // bindToolStripMenuItem
             // 
             this.bindToolStripMenuItem.Name = "bindToolStripMenuItem";
-            this.bindToolStripMenuItem.Size = new System.Drawing.Size(206, 28);
+            this.bindToolStripMenuItem.Size = new System.Drawing.Size(214, 28);
             this.bindToolStripMenuItem.Text = "行動不能";
             this.bindToolStripMenuItem.Click += new System.EventHandler(this.bindToolStripMenuItem_Click);
             // 
             // deadToolStripMenuItem
             // 
             this.deadToolStripMenuItem.Name = "deadToolStripMenuItem";
-            this.deadToolStripMenuItem.Size = new System.Drawing.Size(206, 28);
+            this.deadToolStripMenuItem.Size = new System.Drawing.Size(214, 28);
             this.deadToolStripMenuItem.Text = "戦闘不能";
             this.deadToolStripMenuItem.Click += new System.EventHandler(this.deadToolStripMenuItem_Click);
             // 
@@ -107,6 +107,12 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // skillToolTip
+            // 
+            this.skillToolTip.AutoPopDelay = 3000;
+            this.skillToolTip.InitialDelay = 500;
+            this.skillToolTip.ReshowDelay = 100;
+            // 
             // floatTimeline
             // 
             this.floatTimeline.AutoScroll = true;
@@ -119,6 +125,14 @@
             this.floatTimeline.TabIndex = 1;
             this.floatTimeline.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TimelineForm_Scroll);
             // 
+            // timelinePicture
+            // 
+            this.timelinePicture.Location = new System.Drawing.Point(0, 0);
+            this.timelinePicture.Name = "timelinePicture";
+            this.timelinePicture.Size = new System.Drawing.Size(16, 16);
+            this.timelinePicture.TabIndex = 1;
+            this.timelinePicture.TabStop = false;
+            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
@@ -128,14 +142,9 @@
             this.pictureBox1.Size = new System.Drawing.Size(284, 261);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            // 
-            // timelinePicture
-            // 
-            this.timelinePicture.Location = new System.Drawing.Point(0, 0);
-            this.timelinePicture.Name = "timelinePicture";
-            this.timelinePicture.Size = new System.Drawing.Size(16, 16);
-            this.timelinePicture.TabIndex = 1;
-            this.timelinePicture.TabStop = false;
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseDown);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseUp);
             // 
             // TimelineForm
             // 
@@ -149,13 +158,11 @@
             this.Load += new System.EventHandler(this.TimelineForm_Load);
             this.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TimelineForm_Scroll);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseClick);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TimelineForm_MouseUp);
             this.contextMenuStrip1.ResumeLayout(false);
             this.floatTimeline.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.timelinePicture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
