@@ -25,6 +25,7 @@ namespace PCRTimeline
         TimelineForm timeline;
         CharaForm chara;
         DataForm dataform;
+        StatusForm statusform;
 
         string currentFilename = "";
 
@@ -94,10 +95,12 @@ namespace PCRTimeline
 
             OpenDataForm();
 
+            OpenStatusForm();
 
-//             GoogleSpreadSheet sheet = new GoogleSpreadSheet();
-// 
-//             sheet.ReadSecretFromResource();
+
+            //             GoogleSpreadSheet sheet = new GoogleSpreadSheet();
+            // 
+            //             sheet.ReadSecretFromResource();
 
         }
 
@@ -127,6 +130,13 @@ namespace PCRTimeline
             dataform = new DataForm();
             dataform.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Float);
             dataform.Hide();
+        }
+
+        private void OpenStatusForm()
+        {
+            statusform = new StatusForm();
+            statusform.Show(dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Float);
+            statusform.Hide();
         }
 
         Point mouseDownPoint = Point.Empty;
@@ -284,6 +294,11 @@ namespace PCRTimeline
             FormShowHide(dataToolStripMenuItem, dataform);
         }
 
+        private void stautsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormShowHide(dataToolStripMenuItem, statusform);
+        }
+
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -421,8 +436,9 @@ namespace PCRTimeline
             timelineToolStripMenuItem.Checked = !timeline.IsHidden;
             charaToolStripMenuItem.Checked = !chara.IsHidden;
             dataToolStripMenuItem.Checked = !dataform.IsHidden;
-
+            statusToolStripMenuItem.Checked = !statusform.IsHidden;
         }
+
     }
 }
 

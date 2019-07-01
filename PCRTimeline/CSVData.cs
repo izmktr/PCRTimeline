@@ -185,5 +185,22 @@ namespace PCRTimeline
                 }
             }
         }
+
+        public void ReadBattleStatus(string filename, List<CSVBattleStatus> bslist)
+        {
+            using (var streamReader = new StreamReader(filename))
+            using (var csv = new CsvReader(streamReader))
+            {
+                csv.Configuration.HasHeaderRecord = false;
+                var battledata = csv.GetRecords<CSVBattleStatus>();
+
+                foreach (var battle in battledata)
+                {
+                    bslist.Add(battle);
+                }
+            }
+        }
+
+
     }
 }

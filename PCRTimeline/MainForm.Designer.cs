@@ -51,6 +51,7 @@
             this.developToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.csvImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+            this.statusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,7 +82,7 @@
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(105, 27);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(107, 27);
             this.fileToolStripMenuItem.Text = "ファイル(&F)";
             // 
             // fileOpenToolStripMenuItem
@@ -89,7 +90,7 @@
             this.fileOpenToolStripMenuItem.Name = "fileOpenToolStripMenuItem";
             this.fileOpenToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+O";
             this.fileOpenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.fileOpenToolStripMenuItem.Size = new System.Drawing.Size(250, 28);
+            this.fileOpenToolStripMenuItem.Size = new System.Drawing.Size(258, 28);
             this.fileOpenToolStripMenuItem.Text = "開く(&O)";
             this.fileOpenToolStripMenuItem.Click += new System.EventHandler(this.fileOpenToolStripMenuItem_Click);
             // 
@@ -98,7 +99,7 @@
             this.insertOpenToolStripMenuItem.Name = "insertOpenToolStripMenuItem";
             this.insertOpenToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+I";
             this.insertOpenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.insertOpenToolStripMenuItem.Size = new System.Drawing.Size(250, 28);
+            this.insertOpenToolStripMenuItem.Size = new System.Drawing.Size(258, 28);
             this.insertOpenToolStripMenuItem.Text = "追加して開く(&I)";
             this.insertOpenToolStripMenuItem.Click += new System.EventHandler(this.insertOpenToolStripMenuItem_Click);
             // 
@@ -107,7 +108,7 @@
             this.fileSaveToolStripMenuItem.Name = "fileSaveToolStripMenuItem";
             this.fileSaveToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+S";
             this.fileSaveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.fileSaveToolStripMenuItem.Size = new System.Drawing.Size(250, 28);
+            this.fileSaveToolStripMenuItem.Size = new System.Drawing.Size(258, 28);
             this.fileSaveToolStripMenuItem.Text = "保存(&S)";
             this.fileSaveToolStripMenuItem.Click += new System.EventHandler(this.fileSaveToolStripMenuItem_Click);
             // 
@@ -115,33 +116,33 @@
             // 
             this.fileSaveAsToolStripMenuItem.Name = "fileSaveAsToolStripMenuItem";
             this.fileSaveAsToolStripMenuItem.ShortcutKeyDisplayString = "";
-            this.fileSaveAsToolStripMenuItem.Size = new System.Drawing.Size(250, 28);
+            this.fileSaveAsToolStripMenuItem.Size = new System.Drawing.Size(258, 28);
             this.fileSaveAsToolStripMenuItem.Text = "名前をつけて保存(&A)";
             this.fileSaveAsToolStripMenuItem.Click += new System.EventHandler(this.fileSaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(247, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(255, 6);
             // 
             // exportImageToolStripMenuItem1
             // 
             this.exportImageToolStripMenuItem1.Name = "exportImageToolStripMenuItem1";
             this.exportImageToolStripMenuItem1.ShortcutKeyDisplayString = "Ctrl+E";
             this.exportImageToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.exportImageToolStripMenuItem1.Size = new System.Drawing.Size(250, 28);
+            this.exportImageToolStripMenuItem1.Size = new System.Drawing.Size(258, 28);
             this.exportImageToolStripMenuItem1.Text = "画像で出力(&E)";
             this.exportImageToolStripMenuItem1.Click += new System.EventHandler(this.exportImageToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(247, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(255, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(250, 28);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(258, 28);
             this.exitToolStripMenuItem.Text = "終了(&X)";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -154,20 +155,20 @@
             this.x2ToolStripMenuItem,
             this.x4ToolStripMenuItem});
             this.scopeToolStripMenuItem.Name = "scopeToolStripMenuItem";
-            this.scopeToolStripMenuItem.Size = new System.Drawing.Size(76, 27);
+            this.scopeToolStripMenuItem.Size = new System.Drawing.Size(78, 27);
             this.scopeToolStripMenuItem.Text = "倍率(&X)";
             // 
             // x14ToolStripMenuItem
             // 
             this.x14ToolStripMenuItem.Name = "x14ToolStripMenuItem";
-            this.x14ToolStripMenuItem.Size = new System.Drawing.Size(119, 28);
+            this.x14ToolStripMenuItem.Size = new System.Drawing.Size(127, 28);
             this.x14ToolStripMenuItem.Text = "x1/4";
             this.x14ToolStripMenuItem.Click += new System.EventHandler(this.x14ToolStripMenuItem_Click);
             // 
             // x12ToolStripMenuItem
             // 
             this.x12ToolStripMenuItem.Name = "x12ToolStripMenuItem";
-            this.x12ToolStripMenuItem.Size = new System.Drawing.Size(119, 28);
+            this.x12ToolStripMenuItem.Size = new System.Drawing.Size(127, 28);
             this.x12ToolStripMenuItem.Text = "x1/2";
             this.x12ToolStripMenuItem.Click += new System.EventHandler(this.x12ToolStripMenuItem_Click);
             // 
@@ -176,21 +177,21 @@
             this.x1ToolStripMenuItem.Checked = true;
             this.x1ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.x1ToolStripMenuItem.Name = "x1ToolStripMenuItem";
-            this.x1ToolStripMenuItem.Size = new System.Drawing.Size(119, 28);
+            this.x1ToolStripMenuItem.Size = new System.Drawing.Size(127, 28);
             this.x1ToolStripMenuItem.Text = "x1";
             this.x1ToolStripMenuItem.Click += new System.EventHandler(this.x1ToolStripMenuItem_Click);
             // 
             // x2ToolStripMenuItem
             // 
             this.x2ToolStripMenuItem.Name = "x2ToolStripMenuItem";
-            this.x2ToolStripMenuItem.Size = new System.Drawing.Size(119, 28);
+            this.x2ToolStripMenuItem.Size = new System.Drawing.Size(127, 28);
             this.x2ToolStripMenuItem.Text = "x2";
             this.x2ToolStripMenuItem.Click += new System.EventHandler(this.x2ToolStripMenuItem_Click);
             // 
             // x4ToolStripMenuItem
             // 
             this.x4ToolStripMenuItem.Name = "x4ToolStripMenuItem";
-            this.x4ToolStripMenuItem.Size = new System.Drawing.Size(119, 28);
+            this.x4ToolStripMenuItem.Size = new System.Drawing.Size(127, 28);
             this.x4ToolStripMenuItem.Text = "x4";
             this.x4ToolStripMenuItem.Click += new System.EventHandler(this.x4ToolStripMenuItem_Click);
             // 
@@ -199,9 +200,10 @@
             this.windowToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.timelineToolStripMenuItem,
             this.charaToolStripMenuItem,
-            this.dataToolStripMenuItem});
+            this.dataToolStripMenuItem,
+            this.statusToolStripMenuItem});
             this.windowToolStripMenuItem.Name = "windowToolStripMenuItem";
-            this.windowToolStripMenuItem.Size = new System.Drawing.Size(126, 27);
+            this.windowToolStripMenuItem.Size = new System.Drawing.Size(128, 27);
             this.windowToolStripMenuItem.Text = "ウィンドウ(&W)";
             this.windowToolStripMenuItem.DropDownOpening += new System.EventHandler(this.windowToolStripMenuItem_DropDownOpening);
             // 
@@ -210,7 +212,7 @@
             this.timelineToolStripMenuItem.Checked = true;
             this.timelineToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.timelineToolStripMenuItem.Name = "timelineToolStripMenuItem";
-            this.timelineToolStripMenuItem.Size = new System.Drawing.Size(216, 28);
+            this.timelineToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
             this.timelineToolStripMenuItem.Text = "タイムライン(&T)";
             this.timelineToolStripMenuItem.Click += new System.EventHandler(this.timelineToolStripMenuItem_Click);
             // 
@@ -219,14 +221,14 @@
             this.charaToolStripMenuItem.Checked = true;
             this.charaToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.charaToolStripMenuItem.Name = "charaToolStripMenuItem";
-            this.charaToolStripMenuItem.Size = new System.Drawing.Size(216, 28);
+            this.charaToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
             this.charaToolStripMenuItem.Text = "キャラクター(&C)";
             this.charaToolStripMenuItem.Click += new System.EventHandler(this.charaToolStripMenuItem_Click);
             // 
             // dataToolStripMenuItem
             // 
             this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
-            this.dataToolStripMenuItem.Size = new System.Drawing.Size(216, 28);
+            this.dataToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
             this.dataToolStripMenuItem.Text = "データ(&D)";
             this.dataToolStripMenuItem.Click += new System.EventHandler(this.dataToolStripMenuItem_Click);
             // 
@@ -235,13 +237,13 @@
             this.developToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.csvImportToolStripMenuItem});
             this.developToolStripMenuItem.Name = "developToolStripMenuItem";
-            this.developToolStripMenuItem.Size = new System.Drawing.Size(77, 27);
+            this.developToolStripMenuItem.Size = new System.Drawing.Size(79, 27);
             this.developToolStripMenuItem.Text = "開発(&D)";
             // 
             // csvImportToolStripMenuItem
             // 
             this.csvImportToolStripMenuItem.Name = "csvImportToolStripMenuItem";
-            this.csvImportToolStripMenuItem.Size = new System.Drawing.Size(216, 28);
+            this.csvImportToolStripMenuItem.Size = new System.Drawing.Size(179, 28);
             this.csvImportToolStripMenuItem.Text = "CSV Import";
             this.csvImportToolStripMenuItem.Click += new System.EventHandler(this.CSVImportToolStripMenuItem_Click);
             // 
@@ -254,6 +256,13 @@
             this.dockPanel1.Name = "dockPanel1";
             this.dockPanel1.Size = new System.Drawing.Size(1092, 550);
             this.dockPanel1.TabIndex = 1;
+            // 
+            // statusToolStripMenuItem
+            // 
+            this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(224, 28);
+            this.statusToolStripMenuItem.Text = "ステータス(&)";
+            this.statusToolStripMenuItem.Click += new System.EventHandler(this.stautsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -299,6 +308,7 @@
         private System.Windows.Forms.ToolStripMenuItem developToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem csvImportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem statusToolStripMenuItem;
     }
 }
 

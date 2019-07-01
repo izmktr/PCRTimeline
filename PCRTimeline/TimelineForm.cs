@@ -17,6 +17,7 @@ namespace PCRTimeline
         int[] secondsizearray = { 4, 8, 16, 32, 64 };
         const int timelineheight = 16;
         const int IconSize = 48;
+        const int TimeHeader = 16;
         const int limittime = 90;
         const int righttime = limittime + 5;
 
@@ -36,6 +37,7 @@ namespace PCRTimeline
             public Rectangle rect;
             public TimelineType dragpoint;
             public CustomSkill skill;
+            public AttackResult attackresult;
 
             public DragPoint(float start, Rectangle rect, TimelineType dragpoint, CustomSkill skill)
             {
@@ -43,6 +45,7 @@ namespace PCRTimeline
                 this.rect = rect;
                 this.dragpoint = dragpoint;
                 this.skill = skill;
+                this.attackresult = null;
             }
 
             public string Infomation()
@@ -55,7 +58,6 @@ namespace PCRTimeline
             }
         }
         List<DragPoint> dragablepoint = new List<DragPoint>();
-
 
         class ClickPoint
         {
@@ -79,23 +81,23 @@ namespace PCRTimeline
             InitializeComponent();
         }
 
-        static IEnumerable<(CustomSkill skill, Rectangle rect)> SkillRectangle(IEnumerable<CustomSkill> timeline, int y, int secondsize, int hoffset)
+        static IEnumerable<(CustomSkill skill, Rectangle rect)> SkillRectangle(IEnumerable<CustomSkill> timeline, int secondsize)
         {
             float time = 0f;
             foreach (var cskill in timeline)
             {
-                int x = (int)(time * secondsize + IconSize) - hoffset;
+                int x = (int)(time * secondsize + IconSize);
                 int width = (int)(cskill.interval * secondsize);
 
                 Rectangle skillrect;
                 int minwidth = 4;
                 if (width < minwidth)
                 {
-                    skillrect = new Rectangle(x, y + 0, minwidth, IconSize - 8);
+                    skillrect = new Rectangle(x, 0, minwidth, IconSize - 8);
                 }
                 else
                 {
-                    skillrect = new Rectangle(x, y + 4, width, IconSize - 16);
+                    skillrect = new Rectangle(x, 4, width, IconSize - 16);
                 }
 
                 yield return (cskill, skillrect);
@@ -107,70 +109,57 @@ namespace PCRTimeline
             }
         }
 
-        private void TimelineForm_Paint(object sender, PaintEventArgs e)
+        void SetWindowSize()
         {
+            int width = IconSize + righttime * secondsize;
+            int height = TimeHeader + IconSize * battlerlist.Count;
+            floatTimeline.AutoScrollMinSize = new Size(width, height);
+        }
 
+        public void CreatePoint()
+        {
+            SetWindowSize();
             dragablepoint.Clear();
             clickablepoint.Clear();
 
-            int maxvalue = righttime * secondsize - (this.Width - IconSize);
-            if (maxvalue < hScrollBar1.Value)
-            {
-                hScrollBar1.Value = Math.Max(0, maxvalue);
-            }
+            CalcDamage();
 
-            int y = 0;
-            Graphics g = e.Graphics;
-
-            g.FillRectangle(Brushes.White, new Rectangle(0, 0, Width, Height));
-
-            DrawTimeline(g, IconSize, secondsize, hScrollBar1.Value, this.Size);
-            y += 16;
-
+            int bindex = 0;
             foreach (var battler in battlerlist)
             {
                 CustomSkill before = null;
                 float time = 0f;
-                foreach (var (skill, rect) in SkillRectangle(battler.timeline, y, secondsize, hScrollBar1.Value))
+
+                foreach (var (skill, srect) in SkillRectangle(battler.timeline, secondsize))
                 {
-                    DrawSkill(g, battler, skill, rect);
+                    var rect = new Rectangle(srect.X, srect.Y + TimeHeader + IconSize * bindex, srect.Width, srect.Height);
 
                     AddDragPoint(time, skill, rect, before);
                     AddClickPoint(battler, skill, rect, before);
                     before = skill;
                     time += skill.interval;
                 }
-
-                time = 0f;
-                var shiftHeight = new int[10];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-                foreach (var item in battler.timeline)
-                {
-                    int x = (int)((time) * secondsize + IconSize) - this.hScrollBar1.Value;
-                    if (item.effect != null && 0 < item.effect.duration)
-                    {
-                        int px = (int)(x + item.effect.delay * secondsize);
-                        int py = y + 16 + item.skillNo * 6 + shiftHeight[item.skillNo] * 3;
-                        var rect = new Rectangle(px, py, (int)(item.effect.duration * secondsize), IconSize - 32);
-                        g.FillRectangle(Brushes.LightYellow, rect);
-                        g.DrawRectangle(Pens.DarkGray, rect);
-
-                        shiftHeight[item.skillNo] = (shiftHeight[item.skillNo] + 1) % 2;
-                    }
-                    time += item.interval;
-                    if (limittime < time) break;
-                    if (item.Type == SkillType.Dead) break;
-                }
-
-                //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
-
-                Image image = battler.avatar.image;
-                g.DrawImage(image, 0, y, image.Width, image.Height);
-
-                y += IconSize;
+                bindex++;
             }
 
-            hScrollBar1.Maximum = righttime * secondsize;
-            hScrollBar1.LargeChange = this.Width;
+            var size = new Size(IconSize + righttime * secondsize, TimeHeader + IconSize * battlerlist.Count);
+
+            var image = new Bitmap(size.Width, size.Height);
+
+            CreatePicture(Graphics.FromImage(image), new Rectangle(Point.Empty, image.Size));
+            pictureBox1.Image = image;
+
+            Invalidate();
+        }
+
+        private void CalcDamage()
+        {
+            var enemy = battlerlist.Find(n => n.avatar.position == 0)?.avatar;
+            if (enemy == null)
+            {
+                enemy = new Avatar();
+            }
+
         }
 
         private void AddClickPoint(Battler battler, CustomSkill skill, Rectangle skillrect, CustomSkill before)
@@ -197,21 +186,21 @@ namespace PCRTimeline
             }
         }
 
-        private void DrawSkill(Graphics g, Battler battler, CustomSkill item, Rectangle skillrect)
+        private void DrawSkill(Graphics g, Battler battler, CustomSkill item, Rectangle skillrect, Point offset)
         {
             if (0 < skillrect.Width)
             {
-                Image image = battler.avatar.image;
+                var drawrect = new Rectangle(skillrect.X + offset.X, skillrect.Y + offset.Y, skillrect.Width, skillrect.Height);
 
                 var color = GetColor(item);
                 LinearGradientBrush gb = new LinearGradientBrush(
-                    skillrect, color, Color.White, LinearGradientMode.Horizontal);
+                    drawrect, color, Color.White, LinearGradientMode.Horizontal);
 
-                g.FillRectangle(gb, skillrect);
-                g.DrawRectangle(Pens.DarkGray, skillrect);
+                g.FillRectangle(gb, drawrect);
+                g.DrawRectangle(Pens.DarkGray, drawrect);
                 if (item.darty)
                 {
-                    var flute = skillrect;
+                    var flute = drawrect;
                     flute.Inflate(1, 1);
                     g.DrawRectangle(Pens.DarkGray, flute);
                 }
@@ -219,18 +208,18 @@ namespace PCRTimeline
                 if (item.name != null && item.Type != SkillType.Attack)
                 {
                     var clip = g.ClipBounds;
-                    g.SetClip(skillrect);
-                    g.DrawString(item.name, this.Font, Brushes.Black, skillrect.X + 1, skillrect.Y + 1);
+                    g.SetClip(drawrect);
+                    g.DrawString(item.name, this.Font, Brushes.Black, drawrect.X + 1, drawrect.Y + 1);
                     g.SetClip(clip);
                 }
             }
         }
 
-        public void DrawTimeline(Graphics g, int IconSize, int secondsize, int offset, Size size)
+        public void DrawTimeline(Graphics g, int secondsize, Size size, Point offset)
         {
             for (int i = 0; i <= 90; i++)
             {
-                int x = IconSize + i * secondsize - offset;
+                int x = IconSize + i * secondsize + offset.X;
                 var pen = i % 10 == 0 ? Pens.Black : i % 5 == 0 ? Pens.Gray : Pens.LightGray;
                 g.DrawLine(pen, new Point(x, timelineheight), new Point(x, size.Height));
 
@@ -295,15 +284,13 @@ namespace PCRTimeline
                 if (skillToolTip.Active)
                 {
                     prevPosition = e.Location;
-                    toolTipTime = 0;
-                    skillToolTip.Hide(this);
-                }
 
-                if (drag == null)
-                {
-                    tooltip = dragablepoint.Find(n => n.rect.Contains(e.Location));
+                    if (tooltip == null || !tooltip.rect.Contains(e.Location))
+                    {
+                        toolTipTime = 0;
+                        skillToolTip.Hide(this);
+                    }
                 }
-
             }
 
             //            ChangeCursor(e);
@@ -321,40 +308,40 @@ namespace PCRTimeline
                         break;
                 }
 
-                Invalidate();
+                CreatePoint();
             }
         }
 
         internal Bitmap ExportImage()
         {
-            Bitmap image = new Bitmap(IconSize + righttime * secondsize, IconSize * battlerlist.Count + 16);
+            Bitmap image = new Bitmap(IconSize + righttime * secondsize, IconSize * battlerlist.Count + TimeHeader);
 
             using (var g = Graphics.FromImage(image))
             {
                 int y = 0;
+                var offset = new Point();
 
                 g.FillRectangle(Brushes.White, new Rectangle(0, 0, image.Width, image.Height));
 
-                DrawTimeline(g, IconSize, secondsize, 0, image.Size);
-                y += 16;
+                DrawTimeline(g, secondsize, image.Size, offset);
+                y += TimeHeader;
 
                 foreach (var battler in battlerlist)
                 {
-                    float time = 0f;
-                    foreach (var (skill, rect) in SkillRectangle(battler.timeline, y, secondsize, hScrollBar1.Value))
+                    foreach (var data in dragablepoint)
                     {
-                        DrawSkill(g, battler, skill, rect);
+                        DrawSkill(g, battler, data.skill, data.rect, offset);
                     }
 
-                    time = 0f;
+                    var time = 0f;
                     var shiftHeight = new int[10];
                     foreach (var item in battler.timeline)
                     {
-                        int x = (int)((time) * secondsize + IconSize);
+                        int x = (int)(time * secondsize + IconSize);
                         if (item.effect != null && 0 < item.effect.duration)
                         {
                             int px = (int)(x + item.effect.delay * secondsize);
-                            int py = y + 16 + item.skillNo * 6 + shiftHeight[item.skillNo] * 3;
+                            int py = y + TimeHeader + item.skillNo * 6 + shiftHeight[item.skillNo] * 3;
                             var rect = new Rectangle(px, py, (int)(item.effect.duration * secondsize), IconSize - 32);
                             g.FillRectangle(Brushes.LightYellow, rect);
                             g.DrawRectangle(Pens.DarkGray, rect);
@@ -368,8 +355,7 @@ namespace PCRTimeline
 
                     //アイコンの表示
                     Image avatarimage = battler.avatar.image;
-                    g.DrawImage(avatarimage, 0, y, avatarimage.Width, avatarimage.Height);
-
+                    g.DrawImage(avatarimage, 0, offset.Y + y, avatarimage.Width, avatarimage.Height);
                     y += IconSize;
                 }
             }
@@ -445,18 +431,14 @@ namespace PCRTimeline
             }
         }
 
-        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-            Invalidate();
-        }
-
         private void resetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (clickpoint != null)
             {
                 clickpoint.skill.Reset();
             }
-            this.Invalidate();
+
+            CreatePoint();
         }
 
         private void AddCustomerSkill(ClickPoint cb, CustomSkill skill)
@@ -477,7 +459,8 @@ namespace PCRTimeline
             var ub = clickpoint.battler.avatar.GetSkill(Data.SkillType.UnionBurst);
             var customskill = new CustomSkill(ub);
             AddCustomerSkill(clickpoint, customskill);
-            this.Invalidate();
+
+            CreatePoint();
         }
 
         private void bindToolStripMenuItem_Click(object sender, EventArgs e)
@@ -485,7 +468,8 @@ namespace PCRTimeline
             var bind = clickpoint.battler.avatar.GetSkill(Data.SkillType.Bind);
             var customskill = new CustomSkill(bind);
             AddCustomerSkill(clickpoint, customskill);
-            this.Invalidate();
+
+            CreatePoint();
         }
 
         private void deadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -493,7 +477,8 @@ namespace PCRTimeline
             var bind = clickpoint.battler.avatar.GetSkill(Data.SkillType.Dead);
             var customskill = new CustomSkill(bind);
             AddCustomerSkill(clickpoint, customskill);
-            this.Invalidate();
+
+            CreatePoint();
         }
 
         private void deleteDataToolStripMenuItem_Click(object sender, EventArgs e)
@@ -505,24 +490,143 @@ namespace PCRTimeline
                 {
                     clickpoint.battler.timeline.RemoveAt(addindex);
                 }
-                this.Invalidate();
+
+                CreatePoint();
             }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (0 <= toolTipTime && drag == null && tooltip != null)
+            if (0 <= toolTipTime && drag == null)
             {
                 toolTipTime += timer1.Interval;
 
                 if (skillToolTip.AutomaticDelay < toolTipTime)
                 {
-                    var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
-                    skillToolTip.Show(tooltip.Infomation(), this, mouse.X, mouse.Y);
+                    var position = prevPosition;
+                    tooltip = dragablepoint.Find(n => n.rect.Contains(position));
+
+                    //                    var mouse = this.PointToClient(System.Windows.Forms.Cursor.Position);
+                    if (tooltip != null)
+                    {
+                        skillToolTip.Show(tooltip.Infomation(), this, position);
+                    }
                     toolTipTime = -1;
                 }
             }
 
+        }
+
+        private void floatTimeline_Paint(object sender, PaintEventArgs e)
+        {
+            var offset = AutoScrollPosition;
+
+            int y = 0;
+            Graphics g = e.Graphics;
+
+            g.FillRectangle(Brushes.White, new Rectangle(0, 0, Width, Height));
+
+            DrawTimeline(g, secondsize, this.Size, offset);
+            y += TimeHeader;
+
+            foreach (var battler in battlerlist)
+            {
+                foreach (var data in dragablepoint)
+                {
+                    DrawSkill(g, battler, data.skill, data.rect, offset);
+                }
+
+                var time = 0f;
+                var shiftHeight = new int[10];
+                foreach (var item in battler.timeline)
+                {
+                    int x = (int)(time * secondsize + IconSize);
+                    if (item.effect != null && 0 < item.effect.duration)
+                    {
+                        int px = (int)(x + item.effect.delay * secondsize);
+                        int py = y + TimeHeader + item.skillNo * 6 + shiftHeight[item.skillNo] * 3;
+                        var rect = new Rectangle(px, py, (int)(item.effect.duration * secondsize), IconSize - 32);
+                        g.FillRectangle(Brushes.LightYellow, rect);
+                        g.DrawRectangle(Pens.DarkGray, rect);
+
+                        shiftHeight[item.skillNo] = (shiftHeight[item.skillNo] + 1) % 2;
+                    }
+                    time += item.interval;
+                    if (limittime < time) break;
+                    if (item.Type == SkillType.Dead) break;
+                }
+
+                //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
+
+//                 Image image = battler.avatar.image;
+//                 g.DrawImage(image, 0, offset.Y + y, image.Width, image.Height);
+//                 y += IconSize;
+            }
+
+        }
+
+        void CreatePicture(Graphics g, Rectangle rect)
+        {
+            g.FillRectangle(Brushes.White, rect);
+
+            Point offset = new Point();
+
+            int y = 0;
+            //DrawTimeline(g, secondsize, this.Size);
+            y += TimeHeader;
+
+            foreach (var battler in battlerlist)
+            {
+                foreach (var data in dragablepoint)
+                {
+                    DrawSkill(g, battler, data.skill, data.rect, offset);
+                }
+
+                var time = 0f;
+                var shiftHeight = new int[10];
+                foreach (var item in battler.timeline)
+                {
+                    int x = (int)((time + item.interval) * secondsize + IconSize);
+                    if (item.effect != null && 0 < item.effect.duration)
+                    {
+                        int px = (int)(x + item.effect.delay * secondsize);
+                        int py = y + TimeHeader + item.skillNo * 6 + shiftHeight[item.skillNo] * 3;
+                        var skillrect = new Rectangle(px, py, (int)(item.effect.duration * secondsize), IconSize - 32);
+                        g.FillRectangle(Brushes.LightYellow, skillrect);
+                        g.DrawRectangle(Pens.DarkGray, skillrect);
+
+                        shiftHeight[item.skillNo] = (shiftHeight[item.skillNo] + 1) % 2;
+                    }
+                    time += item.interval;
+                    if (limittime < time) break;
+                    if (item.Type == SkillType.Dead) break;
+                }
+
+                //DrawImageメソッドで画像を座標(0, 0)の位置に表示する
+
+                //                 Image image = battler.avatar.image;
+                //                 g.DrawImage(image, 0, offset.Y + y, image.Width, image.Height);
+                //                 y += IconSize;
+            }
+
+        }
+
+        private void TimelineForm_Load(object sender, EventArgs e)
+        {
+            var timelinebar = new Bitmap(secondsize * 95, 16);
+            var g = Graphics.FromImage(timelinebar);
+            DrawTimeline(g, secondsize, timelinebar.Size, new Point());
+
+            timelinePicture.Image = timelinebar;
+            timelinePicture.Size = timelinebar.Size;
+        }
+
+        private void TimelineForm_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
+            {
+                timelinePicture.Location = new Point(timelinePicture.Location.X, 0);
+            }
         }
     }
 }
