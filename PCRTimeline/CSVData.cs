@@ -92,7 +92,7 @@ namespace PCRTimeline
                         name = p.name,
                         position = p.position,
                         actionOrder = p.actionOrder,
-                        icon = $@"Data\Icon\{p.aliasName}.png",
+                        icon = $@"Icon\{p.aliasName}.png",
                     });
                 }
             }
@@ -181,7 +181,7 @@ namespace PCRTimeline
                         avatar.skill.Add(skill);
                     }
 
-                    skill.Effect.Add(p);
+                    //skill.Effect.Add(p);
                 }
             }
         }
