@@ -125,10 +125,13 @@ namespace PCRTimeline
             public string aliasName;
             public int position;
             public string actionOrder;
+            public int avatarOrder;
 
             public string icon;
 
             public List<Skill> skill = new List<Skill>();
+
+            public List<AvatarStatus> statuslist = new List<AvatarStatus>();
 
             [System.Xml.Serialization.XmlIgnore]
             public Image image;
@@ -141,6 +144,7 @@ namespace PCRTimeline
                 ret.position = position;
                 ret.skill = skill;
                 ret.actionOrder = actionOrder;
+                ret.avatarOrder = avatarOrder;
                 return ret;
             }
 
@@ -300,7 +304,8 @@ namespace PCRTimeline
 
             public int GetOrder(string name)
             {
-                return list.FindIndex(n => n == name);
+                int idx = list.FindIndex(n => n == name);
+                return idx < 0 ? 9999 : idx;
             }
 
             public void Load(string filename)

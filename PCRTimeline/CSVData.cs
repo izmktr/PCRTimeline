@@ -186,7 +186,38 @@ namespace PCRTimeline
             }
         }
 
-        public void ReadBattleStatus(string filename, List<CSVBattleStatus> bslist)
+        AvatarStatus Convert(CSVBattleStatus bs)
+        {
+            var ast = new AvatarStatus();
+
+            ast.Name = CreateName(bs);
+            ast.Level = bs.Level;
+            ast.Rank = bs.Rank;
+            ast.PAtk = bs.PAtk;
+            ast.PDef = bs.PDef;
+            ast.MaxHp = bs.MaxHp;
+            ast.Avoid = bs.Avoid;
+            ast.Accuracy = bs.Accuracy;
+            ast.HPAuto = bs.HPAuto;
+            ast.TPAuto = bs.TPAuto;
+            ast.HPDrain = bs.HPDrain;
+            ast.HealUp = bs.HealUp;
+            ast.TPUp = bs.TPUp;
+            ast.TPReduction = bs.TPReduction;
+            ast.MAtk = bs.MAtk;
+            ast.MDef = bs.MDef;
+            ast.PCri = bs.PCri;
+            ast.MCri = bs.MCri;
+
+            return ast;
+        }
+
+        string CreateName(CSVBattleStatus bs)
+        {
+            return $"Level:{bs.Level} Rank:{bs.Rank} Equip:{bs.Equip} ";
+        }
+
+        public void ReadBattleStatus(string filename, List<Avatar> avatarlist)
         {
             using (var streamReader = new StreamReader(filename))
             using (var csv = new CsvReader(streamReader))
@@ -196,11 +227,27 @@ namespace PCRTimeline
 
                 foreach (var battle in battledata)
                 {
-                    bslist.Add(battle);
+                    var avatar = avatarlist.Find(n => n.aliasName == battle.aliasName);
+                    if (avatar != null)
+                    {
+                        avatar.statuslist.Add(Convert(battle));
+                    }
+
                 }
             }
         }
 
+        internal void ReadOrder(string filename, List<Avatar> avatarlist)
+        {
+            CharactorOrder order = new CharactorOrder();
+            order.Load(filename);
 
+
+            foreach (var avatar in avatarlist)
+            {
+                avatar.avatarOrder = order.GetOrder(avatar.aliasName);
+            }
+
+        }
     }
 }

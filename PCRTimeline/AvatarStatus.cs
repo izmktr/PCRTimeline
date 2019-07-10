@@ -18,6 +18,7 @@ namespace PCRTimeline
         MCri,
         Hit,
         Avoid,
+        Accuracy,
         HealUp,
         TPUp,
         HPAuto,
@@ -42,7 +43,7 @@ namespace PCRTimeline
 
     }
 
-    static class AttackFlag {
+    public static class AttackFlag {
         public const uint Psysical = 1 << 0;
         public const uint Magic = 1 << 1;
         public const uint EnshuredHit = 1 << 2;
@@ -50,8 +51,9 @@ namespace PCRTimeline
         public const uint Invincible = 1 << 4;
     }
 
-    class AvatarStatus
+    public class AvatarStatus
     {
+        public string Name = "";
         public int Level = 0;
         public int Rank = 0;
         public int Equip = 0;
@@ -65,8 +67,10 @@ namespace PCRTimeline
         public int MCri = 0;
         public int Hit = 0;
         public int Avoid = 0;
+        public int Accuracy = 0;
         public int HealUp = 0;
         public int TPUp = 0;
+        public int TPReduction = 0;
         public int HPDrain = 0;
         public int HPAuto = 0;
         public int TPAuto = 0;
@@ -93,6 +97,8 @@ namespace PCRTimeline
                     return Hit;
                 case SkillEffectType.Avoid:
                     return Avoid;
+                case SkillEffectType.Accuracy:
+                    return Accuracy;
                 case SkillEffectType.HealUp:
                     return HealUp;
                 case SkillEffectType.TPUp:
@@ -123,7 +129,7 @@ namespace PCRTimeline
             }
 
             int avoid = Math.Max(defence.Avoid - attack.Hit, 0);
-            result.avoidRate = 1f * avoid / (100 + avoid);
+            result.avoidRate = 100f * avoid / (100f + avoid);
             result.hpDrain = result.damage * attack.HPDrain / (attack.HPDrain + defence.Level + 100);
 
             result.tpGain = 90 * (100 + attack.TPUp) / 100;
@@ -138,7 +144,7 @@ namespace PCRTimeline
         }
     }
 
-    class AttackResult
+    public class AttackResult
     {
         public int damage;
         public float criRate;
@@ -148,6 +154,15 @@ namespace PCRTimeline
         public int tpEnemyGain;
 
         public int avgDamage { get { return (int)(damage * (1 + criRate) * (1 - avoidRate)); } }
+
+        public string Info()
+        {
+            return $"{damage}[{avgDamage}]";
+        }
+        public string SubInfo()
+        {
+            return $"CRI:{criRate} AVD:{avoidRate}";
+        }
     }
 
     

@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Avatar.cs" />
     <Compile Include="AvatarStatus.cs" />
+    <Compile Include="BattleField.cs" />
     <Compile Include="Battler.cs" />
     <Compile Include="Calc.cs" />
     <Compile Include="CharaForm.cs">
@@ -97,6 +98,7 @@
       <DependentUpon>DataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GoogleSpreadSheet.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

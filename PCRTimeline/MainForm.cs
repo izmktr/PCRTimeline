@@ -38,7 +38,7 @@ namespace PCRTimeline
 
         void AvatarLoad()
         {
-            {
+            try{
                 const string path = @"Data\";
                 string[] files = System.IO.Directory.GetFiles(path, "*.xml", System.IO.SearchOption.AllDirectories);
 
@@ -65,7 +65,13 @@ namespace PCRTimeline
                     avatar.SkillDefault();
                     avatarlist.Add(avatar);
                 }
+            }catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
             }
+
+            avatarlist.Sort((a, b) => a.avatarOrder - b.avatarOrder);
+
         }
 
         private Image CreateIcon(Avatar avatar)
@@ -417,6 +423,8 @@ namespace PCRTimeline
             c.ReadBasicStatus(@"Data\BasicStatus.csv", importAvatarList);
             c.ReadSkillName(@"Data\SkillName.csv", importAvatarList);
             c.ReadSkillTime(@"Data\SkillTime.csv", importAvatarList);
+            c.ReadBattleStatus(@"Data\BattleStatus.csv", importAvatarList);
+            c.ReadOrder(@"Data\order.txt", importAvatarList);
 
             importAvatarList.RemoveAll(n => n.skill.Sum(m => m.acttimelist.Count) == 0);
 

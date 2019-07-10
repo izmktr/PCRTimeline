@@ -54,7 +54,13 @@ namespace PCRTimeline
                 int minute = (int) time / 60;
                 int second = (int) time % 60;
 
-                return $"[{minute}:{second.ToString("D2")}]{skill.name}";
+                string result = $"[{minute}:{second.ToString("D2")}]{skill.name}";
+                if (attackresult != null)
+                {
+                    result += "\n" + attackresult.Info() + "\n" + attackresult.SubInfo();
+                }
+
+                return result;
             }
         }
         List<DragPoint> dragablepoint = new List<DragPoint>();
